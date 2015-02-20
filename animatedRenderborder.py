@@ -6,7 +6,6 @@ if len(bpy.app.handlers.frame_change_pre)>0:
     bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
 
 
-
 bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
 bpy.context.scene.mesh_objects.clear()
@@ -55,9 +54,13 @@ def trackUpdate(self,context):
 
 
 bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=trackUpdate)
+
 bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=trackUpdate)
+
 bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=trackUpdate)
-bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=fakeUpdate)
+
+bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker)or object's vertices for boundary checks", update=fakeUpdate)
+
 bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
 
 
@@ -68,47 +71,31 @@ bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3,
 
 scene = bpy.context.scene
 
-cam = bpy.data.objects['Camera']
-
-#wm = obj.matrix_world #Vertices will be in local space unless multiplied by the world matrix
-
-#objs = ['Cube','Suzanne']
-
+camera = bpy.data.objects['Camera']
 
 
 def animate_render_border(scene):
+    
     objs = [] 
     if scene.animated_render_border_type == "Object": 
         objs = [scene.animated_render_border_object]
     else:
-        for object in bpy.data.groups[scene.animated_render_border_group].objects:    
-            if object.type == "MESH":
-                objs.append(object.name)
+        objs = (object.name for object in bpy.data.groups[scene.animated_render_border_group].objects if object.type =="MESH")
     
-    #verts = (vert.co for vert in obj.data.vertices)
-    #verts = (Vector(vert) for vert in obj.bound_box)  #couldn't get this to work for multiple objects
-    
-    #coords_2d = [world_to_camera_view(scene, cam, wm*coord) for coord in verts]
     
     coords_2d = []
-    
     for obj in objs:
         
         verts = []
         if scene.animated_render_border_use_bounding_box:
-            for corner in bpy.data.objects[obj].bound_box:
-                verts.append(Vector(corner))
+            verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
         else:
-            for vert in bpy.data.objects[obj].data.vertices:
-                verts.append(vert.co)
+            verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
                 
-        wm = bpy.data.objects[obj].matrix_world     
+        wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
         for coord in verts:
-            coords_2d.append(world_to_camera_view(scene, cam, wm*coord))
-    
-
-    # 2d data printout:
-    #rnd = lambda i: round(i)
+            coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
+        #coords_2d.append(world_to_camera_view(scene, camera, wm*coord) for coord in verts)
 
     minX = 1
     maxX = 0
@@ -121,13 +108,10 @@ def animate_render_border(scene):
         
         if x<minX:
             minX = x
-        
         if x>maxX:
             maxX = x
-        
         if y<minY:
             minY = y
-        
         if y>maxY:
             maxY = y                 
             
@@ -135,10 +119,10 @@ def animate_render_border(scene):
     
     margin = bpy.context.scene.animated_render_border_margin
         
-    bpy.context.scene.render.border_min_x = minX - (margin/100)
-    bpy.context.scene.render.border_max_x = maxX + (margin/100)
-    bpy.context.scene.render.border_min_y = minY - (margin/100)
-    bpy.context.scene.render.border_max_y = maxY + (margin/100)  
+    scene.render.border_min_x = minX - (margin/100)
+    scene.render.border_max_x = maxX + (margin/100)
+    scene.render.border_min_y = minY - (margin/100)
+    scene.render.border_max_y = maxY + (margin/100)  
 
 
 bpy.app.handlers.frame_change_pre.append(animate_render_border)
@@ -163,6 +147,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(scene, "animated_render_border_type",expand=True)
         row = layout.row()
+        
         if scene.animated_render_border_type == "Object":
             row.label(text="Mesh object to track:")
             row = layout.row()
@@ -171,7 +156,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             row.label(text="Group to track:")
             row = layout.row()
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
-        
+            
         row.prop(scene, "animated_render_border_margin", text="Margin")    
         row = layout.row()
         row.prop(scene, "animated_render_border_use_bounding_box", text="Use Bounding Box")
