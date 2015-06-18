@@ -16,21 +16,18 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-
+bl_info = {
+    "name": "Animated Render Border",
+    "description": "Track objects or groups with the border render",
+    "author": "Ray Mairlot",
+    "version": (1, 0),
+    "blender": (2, 74, 0),
+    "location": "Properties> Render> Animated Render Border",
+    "category": "Render"}
 
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
-
-
-bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-
-bpy.context.scene.mesh_objects.clear()
-for object in bpy.context.scene.objects:
-    if object.type == "MESH":
-        meshAdd = bpy.context.scene.mesh_objects.add()
-        meshAdd.name = object.name
-
 
 
 #######Update functions########################################################
@@ -80,12 +77,20 @@ def updateBoundingBox(self,context):
             
             object.show_bounds = scene.animated_render_border_draw_bounding_box
                             
-                              
+
+
+def updateObjectList(self,context):
+    
+    bpy.context.scene.mesh_objects.clear()
+    for object in bpy.context.scene.objects:
+        if object.type == "MESH":
+            meshAdd = bpy.context.scene.mesh_objects.add()
+            meshAdd.name = object.name                                  
 
 
 #########Properties###########################################################
 
-
+bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
 bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=trackUpdate)
 
@@ -93,22 +98,22 @@ bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(descript
 
 bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=trackUpdate)
 
-bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker)or object's vertices for boundary checks", update=fakeUpdate)
 
-bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the objects being tracked", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
 
 bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
+
+bpy.types.Scene.animated_render_border_enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=updateObjectList)
+
 
 #########Frame Handler########################################################
 
 
-
-scene = bpy.context.scene
-
-camera = bpy.data.objects['Camera']
-
-
 def animate_render_border(scene):
+    
+    scene = bpy.context.scene
+    camera = bpy.data.objects['Camera']
     
     if scene.animated_render_border_type == "Object" and scene.animated_render_border_object != "" or \
        scene.animated_render_border_type == "Group" and scene.animated_render_border_group != "":
@@ -197,9 +202,19 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
     bl_region_type = 'WINDOW'
     bl_context = "render"
 
-    def draw(self, context):
-        layout = self.layout
 
+    def draw_header(self, context):
+
+        self.layout.prop(context.scene, "animated_render_border_enable", text="")
+
+
+    def draw(self, context):
+                
+        layout = self.layout
+        scene = context.scene
+        
+        layout.active = scene.animated_render_border_enable
+        
         row = layout.row()
         row.prop(scene, "animated_render_border_type",expand=True)
         row = layout.row()
@@ -212,7 +227,8 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             row.label(text="Group to track:")
             row = layout.row()
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
-             
+            
+        row.prop(scene, "animated_render_border_margin", text="Margin")    
         
         enabled = ""
         
@@ -223,11 +239,6 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             
         else:
             enabled = True
-            
-            
-        column = row.column()  
-        column.enabled = enabled  
-        column.prop(scene, "animated_render_border_margin", text="Margin")               
         
         row = layout.row()
         row.enabled = enabled       
@@ -260,7 +271,7 @@ def register():
     bpy.utils.register_class(RenderAnimatedRenderBorder)
     
     bpy.app.handlers.frame_change_pre.append(animate_render_border)
-
+    
 
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
