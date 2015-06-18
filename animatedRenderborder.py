@@ -1,12 +1,27 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software Foundation,
+#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# ##### END GPL LICENSE BLOCK #####
+
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 
 if len(bpy.app.handlers.frame_change_pre)>0:
     bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
-    
-if len(bpy.app.handlers.render_pre)>0:
-    bpy.app.handlers.render_pre.remove(bpy.app.handlers.render_pre[0])
 
 
 bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
@@ -131,8 +146,6 @@ def animate_render_border(scene):
 
 
 bpy.app.handlers.frame_change_pre.append(animate_render_border)
-bpy.app.handlers.render_pre.append(animate_render_border)
-
 
 
 ###########RENDER############################################################
