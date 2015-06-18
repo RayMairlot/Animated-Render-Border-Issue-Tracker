@@ -16,12 +16,10 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
-
-if len(bpy.app.handlers.frame_change_pre)>0:
-    bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
 
 
 bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
@@ -164,10 +162,6 @@ def animate_render_border(scene):
     
     
 
-
-bpy.app.handlers.frame_change_pre.append(animate_render_border)
-
-
 ###########RENDER############################################################
 
 
@@ -217,9 +211,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             row.label(text="Group to track:")
             row = layout.row()
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
-            
-        row.prop(scene, "animated_render_border_margin", text="Margin")    
-        
+             
         
         enabled = ""
         
@@ -230,6 +222,11 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             
         else:
             enabled = True
+            
+            
+        column = row.column()  
+        column.enabled = enabled  
+        column.prop(scene, "animated_render_border_margin", text="Margin")               
         
         row = layout.row()
         row.enabled = enabled       
@@ -260,11 +257,16 @@ class RenderAnimatedRenderBorder(bpy.types.Operator):
 def register():
     bpy.utils.register_class(AnimatedRenderBorderPanel)
     bpy.utils.register_class(RenderAnimatedRenderBorder)
+    
+    bpy.app.handlers.frame_change_pre.append(animate_render_border)
 
 
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
     bpy.utils.unregister_class(RenderAnimatedRenderBorder)
+    
+    if len(bpy.app.handlers.frame_change_pre)>0:
+        bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
 
 
 if __name__ == "__main__":
