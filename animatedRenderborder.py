@@ -81,7 +81,7 @@ bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty
 
 bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
 
-
+#bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
 #########Frame Handler########################################################
 
@@ -94,53 +94,56 @@ camera = bpy.data.objects['Camera']
 
 def animate_render_border(scene):
     
-    objs = [] 
-    if scene.animated_render_border_type == "Object": 
-        objs = [scene.animated_render_border_object]
-    else:
-        objs = (object.name for object in bpy.data.groups[scene.animated_render_border_group].objects if object.type =="MESH")
+    if scene.animated_render_border_type == "Object" and scene.animated_render_border_object != "" or \
+       scene.animated_render_border_type == "Group" and scene.animated_render_border_group != "":
     
-    
-    coords_2d = []
-    for obj in objs:
-        
-        verts = []
-        if scene.animated_render_border_use_bounding_box:
-            verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
+        objs = [] 
+        if scene.animated_render_border_type == "Object": 
+            objs = [scene.animated_render_border_object]
         else:
-            verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
-                
-        wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
-        for coord in verts:
-            coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
-        #coords_2d.append(world_to_camera_view(scene, camera, wm*coord) for coord in verts)
-
-    minX = 1
-    maxX = 0
-    minY = 1
-    maxY = 0
-
-    #print("")
-    #print('x,y')
-    for x, y, distance_to_lens in coords_2d:
+            objs = (object.name for object in bpy.data.groups[scene.animated_render_border_group].objects if object.type =="MESH")
         
-        if x<minX:
-            minX = x
-        if x>maxX:
-            maxX = x
-        if y<minY:
-            minY = y
-        if y>maxY:
-            maxY = y                 
+        
+        coords_2d = []
+        for obj in objs:
             
-        #print(round(x,3),round(y,3))  
-        
-    margin = bpy.context.scene.animated_render_border_margin
-        
-    scene.render.border_min_x = minX - (margin/100)
-    scene.render.border_max_x = maxX + (margin/100)
-    scene.render.border_min_y = minY - (margin/100)
-    scene.render.border_max_y = maxY + (margin/100)  
+            verts = []
+            if scene.animated_render_border_use_bounding_box:
+                verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
+            else:
+                verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
+                    
+            wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
+            for coord in verts:
+                coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
+            #coords_2d.append(world_to_camera_view(scene, camera, wm*coord) for coord in verts)
+
+        minX = 1
+        maxX = 0
+        minY = 1
+        maxY = 0
+
+        #print("")
+        #print('x,y')
+        for x, y, distance_to_lens in coords_2d:
+            
+            if x<minX:
+                minX = x
+            if x>maxX:
+                maxX = x
+            if y<minY:
+                minY = y
+            if y>maxY:
+                maxY = y                 
+                
+            #print(round(x,3),round(y,3))  
+            
+        margin = bpy.context.scene.animated_render_border_margin
+            
+        scene.render.border_min_x = minX - (margin/100)
+        scene.render.border_max_x = maxX + (margin/100)
+        scene.render.border_min_y = minY - (margin/100)
+        scene.render.border_max_y = maxY + (margin/100)  
     
     
 
@@ -168,6 +171,14 @@ def main(context):
         
     bpy.context.scene.frame_start = oldStart
     bpy.context.scene.frame_end = oldEnd
+
+
+
+###########BOUNDING BOX############################################################
+
+
+#def updateBoundingBox():
+
 
 
 ###########UI################################################################
@@ -201,9 +212,13 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         row.prop(scene, "animated_render_border_margin", text="Margin")    
         row = layout.row()
         row.prop(scene, "animated_render_border_use_bounding_box", text="Use Bounding Box")
-        row = layout.row()
-        row.prop(bpy.data.objects[scene.animated_render_border_object], "show_bounds", text="Draw Bounding Box")
+
         
+        if scene.animated_render_border_type == "Object" and scene.animated_render_border_object != "":
+            row = layout.row()
+            row.prop(bpy.data.objects[scene.animated_render_border_object], "show_bounds", text="Draw Bounding Box")
+
+
         row = layout.row()
         row.operator("render.render_animated_render_border", text="Render", icon="RENDER_STILL")
         
