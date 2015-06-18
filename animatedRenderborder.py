@@ -4,6 +4,9 @@ from bpy_extras.object_utils import world_to_camera_view
 
 if len(bpy.app.handlers.frame_change_pre)>0:
     bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
+    
+if len(bpy.app.handlers.render_pre)>0:
+    bpy.app.handlers.render_pre.remove(bpy.app.handlers.render_pre[0])
 
 
 bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
@@ -116,17 +119,42 @@ def animate_render_border(scene):
             maxY = y                 
             
         #print(round(x,3),round(y,3))  
-    
+        
     margin = bpy.context.scene.animated_render_border_margin
         
     scene.render.border_min_x = minX - (margin/100)
     scene.render.border_max_x = maxX + (margin/100)
     scene.render.border_min_y = minY - (margin/100)
     scene.render.border_max_y = maxY + (margin/100)  
+    
+    
 
 
 bpy.app.handlers.frame_change_pre.append(animate_render_border)
+bpy.app.handlers.render_pre.append(animate_render_border)
 
+
+
+###########RENDER############################################################
+
+
+def main(context):
+    
+    oldStart = bpy.context.scene.frame_start
+    oldEnd = bpy.context.scene.frame_end
+    
+    for i in range(1, oldEnd+1):
+        
+        bpy.context.scene.frame_set(i)
+        animate_render_border(context.scene)
+        
+        bpy.context.scene.frame_start = i
+        bpy.context.scene.frame_end = i
+         
+        bpy.ops.render.render(animation=True)
+        
+    bpy.context.scene.frame_start = oldStart
+    bpy.context.scene.frame_end = oldEnd
 
 
 ###########UI################################################################
@@ -163,14 +191,31 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         row = layout.row()
         row.prop(bpy.data.objects[scene.animated_render_border_object], "show_bounds", text="Draw Bounding Box")
         
+        row = layout.row()
+        row.operator("render.render_animated_render_border", text="Render", icon="RENDER_STILL")
+        
+
+
+
+class RenderAnimatedRenderBorder(bpy.types.Operator):
+    """Render the sequence using the animated render border"""
+    bl_idname = "render.render_animated_render_border"
+    bl_label = "Render"
+
+    def execute(self, context):
+        main(context)
+        return {'FINISHED'}
+
 
 
 def register():
     bpy.utils.register_class(AnimatedRenderBorderPanel)
+    bpy.utils.register_class(RenderAnimatedRenderBorder)
 
 
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
+    bpy.utils.unregister_class(RenderAnimatedRenderBorder)
 
 
 if __name__ == "__main__":
