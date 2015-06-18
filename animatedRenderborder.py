@@ -17,6 +17,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
@@ -92,9 +93,9 @@ bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(descript
 
 bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=trackUpdate)
 
-bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker)or object's vertices for boundary checks", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=fakeUpdate)
 
-bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the objects being tracked", update=fakeUpdate)
 
 bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
