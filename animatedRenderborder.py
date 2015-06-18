@@ -64,7 +64,24 @@ def trackUpdate(self,context):
             scene.render.use_border = True
             scene.frame_set(bpy.context.scene.frame_current)        
             #print("border set to true as type is obejct and object is not blank")
-                
+            
+            
+
+def updateBoundingBox(self,context):
+    
+    scene = bpy.context.scene
+        
+    if scene.animated_render_border_type == "Object":
+        
+        bpy.data.objects[scene.animated_render_border_object].show_bounds = scene.animated_render_border_draw_bounding_box
+        
+    else:
+        
+        for object in bpy.data.groups[scene.animated_render_border_group].objects:
+            
+            object.show_bounds = scene.animated_render_border_draw_bounding_box
+                            
+                              
 
 
 #########Properties###########################################################
@@ -81,7 +98,7 @@ bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty
 
 bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
 
-#bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
+bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
 #########Frame Handler########################################################
 
@@ -173,14 +190,6 @@ def main(context):
     bpy.context.scene.frame_end = oldEnd
 
 
-
-###########BOUNDING BOX############################################################
-
-
-#def updateBoundingBox():
-
-
-
 ###########UI################################################################
 
 
@@ -210,16 +219,28 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
             
         row.prop(scene, "animated_render_border_margin", text="Margin")    
-        row = layout.row()
-        row.prop(scene, "animated_render_border_use_bounding_box", text="Use Bounding Box")
-
         
-        if scene.animated_render_border_type == "Object" and scene.animated_render_border_object != "":
-            row = layout.row()
-            row.prop(bpy.data.objects[scene.animated_render_border_object], "show_bounds", text="Draw Bounding Box")
-
-
+        
+        enabled = ""
+        
+        if scene.animated_render_border_type == "Object" and scene.animated_render_border_object == "" or \
+           scene.animated_render_border_type == "Group" and scene.animated_render_border_group == "":
+            
+            enabled = False
+            
+        else:
+            enabled = True
+        
         row = layout.row()
+        row.enabled = enabled       
+        row.prop(scene, "animated_render_border_use_bounding_box", text="Use Bounding Box")
+        
+        row = layout.row()
+        row.enabled = enabled           
+        row.prop(scene, "animated_render_border_draw_bounding_box", text="Draw Bounding Box")
+            
+        row = layout.row()     
+        row.enabled = enabled      
         row.operator("render.render_animated_render_border", text="Render", icon="RENDER_STILL")
         
 
