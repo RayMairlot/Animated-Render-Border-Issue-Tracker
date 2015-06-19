@@ -1,24 +1,16 @@
-Intro
+Summary
 ------------------------
 
-The ‘Border render’ feature of blender is a great tool to quickly preview a portion of the image, saving time, as the whole image isn’t being rendered, allowing you to focus render power on specific areas. However, the default border render is fixed in position, so if you are rendering an animation with a moving object you can no longer focus all render power on that object. Or, you can, but you would have to make the border render area large enough that it encompasses any part of the image that the object moves to.
+Rendering an image that has a transparent background means both Cycles and the Blender Internal renderer will spend some time rendering those transparent areas. _We_ know the area is transparent and doesn't need to be rendered, but the renderer only knows that after doing some processing. We can help the renderer along by using the 'Border Render' feature of Blender to isolate our object and skip the rendering of uneccessary parts of the image. While this works for static objects, an animated object cannot benefit from this optimisation as much because the border render area would have to be large enough to encompass the object for the duration of the render.
 
-This script (soon to be addon) aims to remove that limitation by allowing the border render to track an object or group for the duration of the render.
+This addon aims to remove that limitation by allowing the border render to track an object or group for the duration of the render by adjusting the border render for every frame of the animation. It does this either by looking at the bounding box of each object or the slower, but more precise method of looking at each vertex of the object and calculating how large the border render will need to be to cover the object/group.   
 
 Advantages
 ------------------------
-
-•	Preview renders of specific objects only:
-
-Having a border render that tracks an object means you can now render an entire image sequence, presumably for the purposes of testing, with no render power being wasted on other details in the scene. 
-
-•	Blank space will not be rendered:
-
-The second advantage is that blank space will no longer be rendered. While blank space in a render (found when separating objects onto their own render layers, with a transparent background enabled) renders quickly, it does take some time to process that space. Even though we may know it’s going to be blank, the renderer won’t know until it has attempted to render it. We help the render out by using border render, meaning anything outside the border render area will be ignored.
+•Blank space will not be rendered.
+•Preview or final quality renders can be focused to specific objects/groups.
 
 Limitations
 ------------------------
-
-Ideally, you would be able to have different render borders for each render layer, allowing you to render all render layers at once, with each layer isolating the correct objects. I’m not entirely sure that it’s possible to detect which render layer the renderer is currently rendering, only that it is rendering at all. So, you can either use this animated render border script for testing purposes, draft renders and so on, or, you could render the entire render layer out as an image sequence, using the addon, and then import the rendered sequence back into the compositor to combine with your other rendered layers.
-
-Another limitation is that only mesh objects will currently be tracked. Meshes have the option to be tracked via checking vertices or the bounding box of the object, and while objects that don’t have vertices, such as empties do have a bounding box, I have found that they don’t quite track properly compared to meshes. 
+•Currently only mesh objects can be tracked. This will hopefully improved in future. The current workaround would be to animate a plane which covers the object when viewed from the camera and track that.
+•To adjust the border render per frame seems to require a custom render function. This, unfotunately, means the render cannot be cancelled once started without closing blender.
