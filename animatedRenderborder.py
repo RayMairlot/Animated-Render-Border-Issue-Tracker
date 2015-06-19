@@ -51,7 +51,9 @@ def updateBoundingBox(self,context):
         
         for object in bpy.data.groups[scene.animated_render_border_group].objects:
             
-            object.show_bounds = scene.animated_render_border_draw_bounding_box
+            if object.type == "MESH":
+               
+                object.show_bounds = scene.animated_render_border_draw_bounding_box
                             
 
 
@@ -161,7 +163,7 @@ def animate_render_border(scene):
 
 
 def main(context):
-    
+        
     oldStart = bpy.context.scene.frame_start
     oldEnd = bpy.context.scene.frame_end
     
@@ -241,7 +243,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             
         row = layout.row()     
         row.enabled = enabled      
-        row.operator("render.render_animated_render_border", text="Render", icon="RENDER_STILL")
+        row.operator("render.render_animated_render_border", text="Render Animation", icon="RENDER_ANIMATION")
         
 
 
@@ -249,7 +251,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
 class RenderAnimatedRenderBorder(bpy.types.Operator):
     """Render the sequence using the animated render border"""
     bl_idname = "render.render_animated_render_border"
-    bl_label = "Render"
+    bl_label = "Render Animation"
 
     def execute(self, context):
         main(context)
