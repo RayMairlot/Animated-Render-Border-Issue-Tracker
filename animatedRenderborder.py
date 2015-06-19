@@ -47,19 +47,15 @@ def trackUpdate(self,context):
     if scene.animated_render_border_type == "Group":
         if scene.animated_render_border_group == "":
             scene.render.use_border = False
-            #print("border set to false as type is group and group is blank")
         else:
             scene.render.use_border = True
             scene.frame_set(bpy.context.scene.frame_current)
-            #print("border set to true as type is group and group is not blank")
     else:
         if scene.animated_render_border_object == "":
             scene.render.use_border = False
-            #print("border set to false as type is object and object is blank")
         else:
             scene.render.use_border = True
             scene.frame_set(bpy.context.scene.frame_current)        
-            #print("border set to true as type is obejct and object is not blank")
             
             
 
@@ -142,15 +138,12 @@ def animate_render_border(scene):
             wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
             for coord in verts:
                 coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
-            #coords_2d.append(world_to_camera_view(scene, camera, wm*coord) for coord in verts)
 
         minX = 1
         maxX = 0
         minY = 1
         maxY = 0
 
-        #print("")
-        #print('x,y')
         for x, y, distance_to_lens in coords_2d:
             
             if x<minX:
@@ -162,8 +155,6 @@ def animate_render_border(scene):
             if y>maxY:
                 maxY = y                 
                 
-            #print(round(x,3),round(y,3))  
-            
         margin = bpy.context.scene.animated_render_border_margin
             
         scene.render.border_min_x = minX - (margin/100)
