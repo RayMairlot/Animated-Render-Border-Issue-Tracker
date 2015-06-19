@@ -81,16 +81,21 @@ def updateBoundingBox(self,context):
 
 def updateObjectList(self,context):
     
-    bpy.context.scene.mesh_objects.clear()
+    updateObjectListMain()
+    
+    
+def updateObjectListMain(scene):
+        
+    bpy.context.scene.animated_render_border_mesh_objects.clear()
     for object in bpy.context.scene.objects:
         if object.type == "MESH":
-            meshAdd = bpy.context.scene.mesh_objects.add()
-            meshAdd.name = object.name                                  
+            meshAdd = bpy.context.scene.animated_render_border_mesh_objects.add()
+            meshAdd.name = object.name                                          
 
 
 #########Properties###########################################################
 
-bpy.types.Scene.mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+bpy.types.Scene.animated_render_border_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
 bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=trackUpdate)
 
@@ -222,15 +227,12 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         if scene.animated_render_border_type == "Object":
             row.label(text="Mesh object to track:")
             row = layout.row()
-            row.prop_search(scene, "animated_render_border_object", scene, "mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
+            row.prop_search(scene, "animated_render_border_object", scene, "animated_render_border_mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
         else:
             row.label(text="Group to track:")
             row = layout.row()
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
-            
-        row.prop(scene, "animated_render_border_margin", text="Margin")    
         
-        enabled = ""
         
         if scene.animated_render_border_type == "Object" and scene.animated_render_border_object == "" or \
            scene.animated_render_border_type == "Group" and scene.animated_render_border_group == "":
@@ -238,7 +240,12 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             enabled = False
             
         else:
+            
             enabled = True
+            
+        column = row.column()      
+        column.enabled = enabled
+        column.prop(scene, "animated_render_border_margin", text="Margin")    
         
         row = layout.row()
         row.enabled = enabled       
@@ -271,14 +278,16 @@ def register():
     bpy.utils.register_class(RenderAnimatedRenderBorder)
     
     bpy.app.handlers.frame_change_pre.append(animate_render_border)
+    bpy.app.handlers.scene_update_post.append(updateObjectListMain)
+    
     
 
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
     bpy.utils.unregister_class(RenderAnimatedRenderBorder)
     
-    if len(bpy.app.handlers.frame_change_pre)>0:
-        bpy.app.handlers.frame_change_pre.remove(bpy.app.handlers.frame_change_pre[0])
+    bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
+    bpy.app.handlers.scene_update_post.remove(updateObjectListMain)
 
 
 if __name__ == "__main__":
