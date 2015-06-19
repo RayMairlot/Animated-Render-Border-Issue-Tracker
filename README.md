@@ -7,10 +7,12 @@ This addon aims to remove that limitation by allowing the border render to track
 
 Advantages
 ------------------------
-•Blank space will not be rendered.
-•Preview or final quality renders can be focused to specific objects/groups.
+• Blank space will not be rendered.
+
+• Preview or final quality renders can be focused to specific objects/groups.
 
 Limitations
 ------------------------
-•Currently only mesh objects can be tracked. This will hopefully improved in future. The current workaround would be to animate a plane which covers the object when viewed from the camera and track that.
-•To adjust the border render per frame seems to require a custom render function. This, unfotunately, means the render cannot be cancelled once started without closing blender.
+• Currently only mesh objects can be tracked. This will hopefully improved in future. The current workaround would be to animate a plane which covers the object when viewed from the camera and track that.
+
+• To adjust the border render per frame seems to require a custom render function. This, unfotunately, means the render cannot be cancelled once started without closing blender.
