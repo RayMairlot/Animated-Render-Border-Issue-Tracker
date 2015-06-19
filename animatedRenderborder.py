@@ -33,31 +33,11 @@ from bpy_extras.object_utils import world_to_camera_view
 #######Update functions########################################################
 
 
-
 def updateFrame(self,context):
     
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
-    
-
-def enableUseBorder(self,context):
-    
-    scene = bpy.context.scene
-        
-    if scene.animated_render_border_type == "Group":
-        if scene.animated_render_border_group == "":
-            scene.render.use_border = False
-        else:
-            scene.render.use_border = True
-            scene.frame_set(bpy.context.scene.frame_current)
-    else:
-        if scene.animated_render_border_object == "":
-            scene.render.use_border = False
-        else:
-            scene.render.use_border = True
-            scene.frame_set(bpy.context.scene.frame_current)        
-            
-            
+                    
 
 def updateBoundingBox(self,context):
     
@@ -77,6 +57,10 @@ def updateBoundingBox(self,context):
 
 def updateTracking(self,context):
 
+    if context.scene.render.use_border == False:
+        
+        context.scene.render.use_border = True
+
     if bpy.context.scene.animated_render_border_enable:      
         updateObjectList(self)
         bpy.app.handlers.frame_change_pre.append(animate_render_border)
@@ -85,6 +69,7 @@ def updateTracking(self,context):
         bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
         bpy.app.handlers.scene_update_post.remove(updateObjectList)
         
+    updateFrame(self,context)
           
           
 def updateObjectList(scene):
@@ -101,11 +86,11 @@ def updateObjectList(scene):
 
 bpy.types.Scene.animated_render_border_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
-bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=enableUseBorder)
+bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=updateFrame)
 
-bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=enableUseBorder)
+bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=updateFrame)
 
-bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=enableUseBorder)
+bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=updateFrame)
 
 bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=updateFrame)
 
