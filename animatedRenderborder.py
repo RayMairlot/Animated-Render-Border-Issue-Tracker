@@ -34,13 +34,13 @@ from bpy_extras.object_utils import world_to_camera_view
 
 
 
-def fakeUpdate(self,context):
+def updateFrame(self,context):
     
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
     
 
-def trackUpdate(self,context):
+def enableUseBorder(self,context):
     
     scene = bpy.context.scene
         
@@ -75,12 +75,19 @@ def updateBoundingBox(self,context):
                             
 
 
-def updateObjectList(self,context):
-    
-    updateObjectListMain()
-    
-    
-def updateObjectListMain(scene):
+def updateTracking(self,context):
+
+    if bpy.context.scene.animated_render_border_enable:      
+        updateObjectList(self)
+        bpy.app.handlers.frame_change_pre.append(animate_render_border)
+        bpy.app.handlers.scene_update_post.append(updateObjectList)
+    else:
+        bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
+        bpy.app.handlers.scene_update_post.remove(updateObjectList)
+        
+          
+          
+def updateObjectList(scene):
         
     bpy.context.scene.animated_render_border_mesh_objects.clear()
     for object in bpy.context.scene.objects:
@@ -89,23 +96,24 @@ def updateObjectListMain(scene):
             meshAdd.name = object.name                                          
 
 
+
 #########Properties###########################################################
 
 bpy.types.Scene.animated_render_border_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
-bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=trackUpdate)
+bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=enableUseBorder)
 
-bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=trackUpdate)
+bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=enableUseBorder)
 
-bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=trackUpdate)
+bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=enableUseBorder)
 
-bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker)or object's vertices for boundary checks", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=updateFrame)
 
-bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=fakeUpdate)
+bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=updateFrame)
 
 bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
-bpy.types.Scene.animated_render_border_enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=updateObjectList)
+bpy.types.Scene.animated_render_border_enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=updateTracking)
 
 
 #########Frame Handler########################################################
@@ -268,18 +276,11 @@ def register():
     bpy.utils.register_class(AnimatedRenderBorderPanel)
     bpy.utils.register_class(RenderAnimatedRenderBorder)
     
-    bpy.app.handlers.frame_change_pre.append(animate_render_border)
-    bpy.app.handlers.scene_update_post.append(updateObjectListMain)
     
-    
-
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
     bpy.utils.unregister_class(RenderAnimatedRenderBorder)
     
-    bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
-    bpy.app.handlers.scene_update_post.remove(updateObjectListMain)
-
 
 if __name__ == "__main__":
     register()
