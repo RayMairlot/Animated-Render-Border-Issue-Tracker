@@ -282,7 +282,7 @@ def register():
     
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
-    bpy.utils.unregister_class(CancelAnimatedRenderBorder)
+    bpy.utils.unregister_class(RenderAnimatedRenderBorder)
     
 
 if __name__ == "__main__":
