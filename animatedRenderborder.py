@@ -245,16 +245,32 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         row.enabled = enabled      
         row.operator("render.render_animated_render_border", text="Render Animation", icon="RENDER_ANIMATION")
         
-
-
+       
 
 class RenderAnimatedRenderBorder(bpy.types.Operator):
     """Render the sequence using the animated render border"""
     bl_idname = "render.render_animated_render_border"
     bl_label = "Render Animation"
 
+    def invoke(self, context, event):
+        
+        return context.window_manager.invoke_props_dialog(self, width=330, height = 300)
+
+
+    def draw(self, context):
+        layout = self.layout
+        row = layout.row()
+        row.label("Once the render has started it cannot be easily stopped unless ")
+        row = layout.row()
+        row.label("you close Blender. Make sure your work is saved if necessary.")  
+        row = layout.row()
+        row.label("Press 'OK' to render or press 'Esc' key to cancel.")  
+
+
     def execute(self, context):
+ 
         main(context)
+            
         return {'FINISHED'}
 
 
@@ -266,7 +282,7 @@ def register():
     
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
-    bpy.utils.unregister_class(RenderAnimatedRenderBorder)
+    bpy.utils.unregister_class(CancelAnimatedRenderBorder)
     
 
 if __name__ == "__main__":

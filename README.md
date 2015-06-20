@@ -1,4 +1,4 @@
-<h4>Summary</h4>
+﻿<h4>Summary</h4>
 
 In essence, this addon allows the 'border render' feature of blender to be animated by tracking a selected object or group. So, if you have an animation that has an object animating across the screen the border render will update every frame so that the object (or group of objects) is always encompassed. 
 
@@ -16,7 +16,7 @@ The tracking of an object/group is either done by looking at the bounding box of
 
 • Currently only mesh objects can be tracked. This will hopefully improved in future. The current workaround would be to animate a plane which covers the object when viewed from the camera and track that.
 
-• Because a custom render operator is needed to allow the border box to update each frame the render cannot be cancelled like normal renders can. The render can only be cancelled by closing Blender. Because of this, a warning pop-up will appear to notifiy the user to warn them of this (not currently coded).
+• Because a custom render operator is needed to allow the border box to update each frame the render cannot be cancelled like normal renders can. The render can only be cancelled by closing Blender. Because of this, a warning pop-up will appear to notifiy the user to warn them of this.
 
 <h4>Options</h4>
 
