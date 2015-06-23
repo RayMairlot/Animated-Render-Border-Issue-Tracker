@@ -168,10 +168,10 @@ def animate_render_border(scene):
     
     
 
-###########RENDER############################################################
+###########Operators############################################################
 
 
-def main(context):
+def mainRender(context):
                 
     oldStart = context.scene.frame_start
     oldEnd = context.scene.frame_end
@@ -194,6 +194,11 @@ def main(context):
         
     context.scene.frame_start = oldStart
     context.scene.frame_end = oldEnd
+    
+    
+def mainFix(context):
+                
+    context.scene.render.use_border = True
 
 
 ###########UI################################################################
@@ -221,17 +226,33 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         
         layout.active = scene.animated_render_border_enable
         
-        row = layout.row()
+        
+        if not context.scene.render.use_border and scene.animated_render_border_enable:
+            row = layout.row()
+            split = row.split(0.7)
+            
+            column = split.column()
+            column.label(text="'Border' is disabled in", icon="ERROR")
+            column.label(text="'Dimensions' panel.", icon="SCULPT_DYNTOPO")
+            
+            column = split.column()         
+            column.operator("render.animated_render_border_fix", text="Fix")
+            
+        
+        column = layout.column()
+        column.active = context.scene.render.use_border and scene.animated_render_border_enable
+                                
+        row = column.row()
         row.prop(scene, "animated_render_border_type",expand=True)
-        row = layout.row()
+        row = column.row()
         
         if scene.animated_render_border_type == "Object":
             row.label(text="Mesh object to track:")
-            row = layout.row()
+            row = column.row()
             row.prop_search(scene, "animated_render_border_object", scene, "animated_render_border_mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
         else:
             row.label(text="Group to track:")
-            row = layout.row()
+            row = column.row()
             row.prop_search(scene, "animated_render_border_group", bpy.data, "groups", text="")
         
         
@@ -244,60 +265,77 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
             
             enabled = True
             
-        column = row.column()      
-        column.enabled = enabled
-        column.prop(scene, "animated_render_border_margin", text="Margin")    
+        row.prop(scene, "animated_render_border_margin", text="Margin")    
         
-        row = layout.row()
+        row = column.row()
         row.enabled = enabled       
         row.prop(scene, "animated_render_border_use_bounding_box", text="Use Bounding Box")
         
-        row = layout.row()
+        row = column.row()
         row.enabled = enabled           
         row.prop(scene, "animated_render_border_draw_bounding_box", text="Draw Bounding Box")
             
-        row = layout.row()     
+        row = column.row()     
         row.enabled = enabled      
-        row.operator("render.render_animated_render_border", text="Render Animation", icon="RENDER_ANIMATION")
+        row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")
         
        
 
 class RenderAnimatedRenderBorder(bpy.types.Operator):
     """Render the sequence using the animated render border"""
-    bl_idname = "render.render_animated_render_border"
+    bl_idname = "render.animated_render_border_render"
     bl_label = "Render Animation"
 
     def invoke(self, context, event):
         
-        return context.window_manager.invoke_props_dialog(self, width=330, height = 300)
+        return context.window_manager.invoke_props_dialog(self, width=340, height = 300)
 
 
     def draw(self, context):
         layout = self.layout
+                    
         row = layout.row()
-        row.label("Once the render has started it cannot be easily stopped unless ")
+        row.label("Once the render has started it cannot be easily stopped unless", icon="INFO")
         row = layout.row()
         row.label("you close Blender. Make sure your work is saved if necessary.")  
         row = layout.row()
-        row.label("Press 'OK' to render or press 'Esc' key to cancel.")  
+            
+        row.label("Press 'OK' to render or press the 'Esc' key on the keyboard")
+        row = layout.row()
+        row.label("to cancel.")  
 
 
     def execute(self, context):
  
-        main(context)
+        mainRender(context)
             
         return {'FINISHED'}
+    
+    
+    
+class FixAnimatedRenderBorder(bpy.types.Operator):
+    """Fix the render border by turning on 'Border' rendering"""
+    bl_idname = "render.animated_render_border_fix"
+    bl_label = "Render Border Fix"
+
+    def execute(self, context):
+ 
+        mainFix(context)
+            
+        return {'FINISHED'}    
 
 
 
 def register():
     bpy.utils.register_class(AnimatedRenderBorderPanel)
     bpy.utils.register_class(RenderAnimatedRenderBorder)
+    bpy.utils.register_class(FixAnimatedRenderBorder)
     
     
 def unregister():
     bpy.utils.unregister_class(AnimatedRenderBorderPanel)
     bpy.utils.unregister_class(RenderAnimatedRenderBorder)
+    bpy.utils.unregister_class(FixAnimatedRenderBorder)
     
 
 if __name__ == "__main__":
