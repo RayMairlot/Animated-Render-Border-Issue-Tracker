@@ -67,7 +67,7 @@ def updateBoundingBox(self,context):
 
 def toggleTracking(self,context):
 
-    if context.scene.render.use_border == False:
+    if context.scene.animated_render_border_enable == True and context.scene.render.use_border == False:
         
         context.scene.render.use_border = True
 
