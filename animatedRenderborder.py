@@ -50,28 +50,31 @@ def refreshTracking(self,context):
 def updateBoundingBox(self,context):
     
     scene = bpy.context.scene
+    border = scene.animated_render_border
         
-    if scene.animated_render_border.type == "Object" and scene.animated_render_border.object != "":
+    if border.type == "Object" and border.object != "":
         
-        bpy.data.objects[scene.animated_render_border.object].show_bounds = scene.animated_render_border.draw_bounding_box
+        bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
         
-    elif scene.animated_render_border.type == "Group" and scene.animated_render_border.group != "":
+    elif border.type == "Group" and border.group != "":
         
-        for object in bpy.data.groups[scene.animated_render_border.group].objects:
+        for object in bpy.data.groups[border.group].objects:
             
             if object.type == "MESH":
                
-                object.show_bounds = scene.animated_render_border.draw_bounding_box
+                object.show_bounds = border.draw_bounding_box
                             
 
 
 def toggleTracking(self,context):
-
-    if context.scene.animated_render_border.enable == True and context.scene.render.use_border == False:
+    
+    border = context.scene.animated_border_render
+    
+    if border.enable == True and context.scene.render.use_border == False:
         
         context.scene.render.use_border = True
 
-    if bpy.context.scene.animated_render_border.enable:      
+    if bpy.border.enable:      
         updateObjectList(self)
         bpy.app.handlers.frame_change_pre.append(animate_render_border)
         bpy.app.handlers.scene_update_post.append(updateObjectList)
@@ -85,10 +88,12 @@ def toggleTracking(self,context):
           
 def updateObjectList(scene):
         
-    bpy.context.scene.animated_render_border.mesh_objects.clear()
+    border = context.scene.animated_border_render        
+        
+    border.mesh_objects.clear()
     for object in bpy.context.scene.objects:
         if object.type == "MESH":
-            meshAdd = bpy.context.scene.animated_render_border.mesh_objects.add()
+            meshAdd = bpy.border.mesh_objects.add()
             meshAdd.name = object.name                                          
 
 
