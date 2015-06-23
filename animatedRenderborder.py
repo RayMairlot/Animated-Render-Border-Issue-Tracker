@@ -173,8 +173,8 @@ def animate_render_border(scene):
 
 def main(context):
                 
-    oldStart = bpy.context.scene.frame_start
-    oldEnd = bpy.context.scene.frame_end
+    oldStart = context.scene.frame_start
+    oldEnd = context.scene.frame_end
     
     context.window_manager.progress_begin(0,oldEnd)
     
@@ -182,18 +182,18 @@ def main(context):
     
         context.window_manager.progress_update(i)
                 
-        bpy.context.scene.frame_set(i)
+        context.scene.frame_set(i)
         animate_render_border(context.scene)
         
-        bpy.context.scene.frame_start = i
-        bpy.context.scene.frame_end = i
+        context.scene.frame_start = i
+        context.scene.frame_end = i
          
         bpy.ops.render.render(animation=True)
     
     context.window_manager.progress_end()
         
-    bpy.context.scene.frame_start = oldStart
-    bpy.context.scene.frame_end = oldEnd
+    context.scene.frame_start = oldStart
+    context.scene.frame_end = oldEnd
 
 
 ###########UI################################################################
