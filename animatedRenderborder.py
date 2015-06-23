@@ -264,8 +264,11 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         else:
             
             enabled = True
-            
-        row.prop(scene, "animated_render_border_margin", text="Margin")    
+        
+        #New column is to separate it from previous row, it needs to be able to be disabled.
+        columnMargin = row.column()
+        columnMargin.enabled = enabled    
+        columnMargin.prop(scene, "animated_render_border_margin", text="Margin")    
         
         row = column.row()
         row.enabled = enabled       
