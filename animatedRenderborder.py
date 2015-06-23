@@ -37,6 +37,8 @@ def updateFrame(self,context):
     
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
+    updateBoundingBox(self,context)
+    
                     
 
 def updateBoundingBox(self,context):
