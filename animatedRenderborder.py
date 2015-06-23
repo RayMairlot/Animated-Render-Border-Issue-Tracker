@@ -68,13 +68,14 @@ def updateBoundingBox(self,context):
 
 def toggleTracking(self,context):
     
-    border = context.scene.animated_border_render
+    scene = bpy.context.scene
+    border = scene.animated_render_border
     
     if border.enable == True and context.scene.render.use_border == False:
         
         context.scene.render.use_border = True
 
-    if bpy.border.enable:      
+    if border.enable:      
         updateObjectList(self)
         bpy.app.handlers.frame_change_pre.append(animate_render_border)
         bpy.app.handlers.scene_update_post.append(updateObjectList)
@@ -88,12 +89,13 @@ def toggleTracking(self,context):
           
 def updateObjectList(scene):
         
-    border = context.scene.animated_border_render        
+    scene = bpy.context.scene
+    border = scene.animated_render_border     
         
     border.mesh_objects.clear()
     for object in bpy.context.scene.objects:
         if object.type == "MESH":
-            meshAdd = bpy.border.mesh_objects.add()
+            meshAdd = border.mesh_objects.add()
             meshAdd.name = object.name                                          
 
 
@@ -174,7 +176,7 @@ def animate_render_border(scene):
             if y>maxY:
                 maxY = y                 
                 
-        margin = bpy.context.border.margin
+        margin = border.margin
             
         scene.render.border_min_x = minX - (margin/100)
         scene.render.border_max_x = maxX + (margin/100)
