@@ -36,10 +36,16 @@ from bpy_extras.object_utils import world_to_camera_view
 def updateFrame(self,context):
     
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
+     
+     
+   
+def refreshTracking(self,context):
+   
+   bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
-    updateBoundingBox(self,context)
-    
-                    
+   updateBoundingBox(self,context)       
+                   
+
 
 def updateBoundingBox(self,context):
     
@@ -59,7 +65,7 @@ def updateBoundingBox(self,context):
                             
 
 
-def updateTracking(self,context):
+def toggleTracking(self,context):
 
     if context.scene.render.use_border == False:
         
@@ -76,6 +82,7 @@ def updateTracking(self,context):
     updateFrame(self,context)
           
           
+          
 def updateObjectList(scene):
         
     bpy.context.scene.animated_render_border_mesh_objects.clear()
@@ -90,9 +97,9 @@ def updateObjectList(scene):
 
 bpy.types.Scene.animated_render_border_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
-bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=updateFrame)
+bpy.types.Scene.animated_render_border_object = bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
 
-bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=updateFrame)
+bpy.types.Scene.animated_render_border_group = bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
 
 bpy.types.Scene.animated_render_border_type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=updateFrame)
 
@@ -102,7 +109,7 @@ bpy.types.Scene.animated_render_border_margin = bpy.props.IntProperty(default=3,
 
 bpy.types.Scene.animated_render_border_draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
-bpy.types.Scene.animated_render_border_enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=updateTracking)
+bpy.types.Scene.animated_render_border_enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
 
 
 #########Frame Handler########################################################
@@ -165,12 +172,12 @@ def animate_render_border(scene):
 
 
 def main(context):
-        
+            
     oldStart = bpy.context.scene.frame_start
     oldEnd = bpy.context.scene.frame_end
     
     for i in range(1, oldEnd+1):
-        
+                
         bpy.context.scene.frame_set(i)
         animate_render_border(context.scene)
         
