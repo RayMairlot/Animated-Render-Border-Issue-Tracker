@@ -51,11 +51,11 @@ def updateBoundingBox(self,context):
     
     scene = bpy.context.scene
         
-    if scene.animated_render_border_type == "Object":
+    if scene.animated_render_border_type == "Object" and scene.animated_render_border_object != "":
         
         bpy.data.objects[scene.animated_render_border_object].show_bounds = scene.animated_render_border_draw_bounding_box
         
-    else:
+    elif scene.animated_render_border_type == "Group" and scene.animated_render_border_group != "":
         
         for object in bpy.data.groups[scene.animated_render_border_group].objects:
             
