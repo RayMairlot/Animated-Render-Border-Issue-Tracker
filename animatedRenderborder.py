@@ -176,7 +176,7 @@ def main(context):
     oldStart = bpy.context.scene.frame_start
     oldEnd = bpy.context.scene.frame_end
     
-    context.window_manager.progress_begin(0,oldEnd+1)
+    context.window_manager.progress_begin(0,oldEnd)
     
     for i in range(1, oldEnd+1):
     
