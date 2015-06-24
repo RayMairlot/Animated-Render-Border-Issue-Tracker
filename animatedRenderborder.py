@@ -86,7 +86,7 @@ def toggleTracking(self,context):
           
           
 def updateObjectList(scene):
-        
+            
     border = bpy.context.scene.animated_render_border     
         
     border.mesh_objects.clear()
@@ -328,9 +328,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
             
         return {'FINISHED'}
     
-    
-RENDER_OT_animated_render_border_fix
-    
+        
 class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
     """Fix the render border by turning on 'Border' rendering"""
     bl_idname = "render.animated_render_border_fix"
