@@ -218,8 +218,7 @@ def mainFix(context):
 ###########UI################################################################
 
 
-
-class AnimatedRenderBorderPanel(bpy.types.Panel):
+class RENDER_PT_animated_render_border(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
     bl_label = "Animated Render Border"
     bl_idname = "RENDER_PT_animated_render_border"
@@ -299,7 +298,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         
        
 
-class RenderAnimatedRenderBorder(bpy.types.Operator):
+class RENDER_OT_animated_render_border_render(bpy.types.Operator):
     """Render the sequence using the animated render border"""
     bl_idname = "render.animated_render_border_render"
     bl_label = "Render Animation"
@@ -330,8 +329,9 @@ class RenderAnimatedRenderBorder(bpy.types.Operator):
         return {'FINISHED'}
     
     
+RENDER_OT_animated_render_border_fix
     
-class FixAnimatedRenderBorder(bpy.types.Operator):
+class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
     """Fix the render border by turning on 'Border' rendering"""
     bl_idname = "render.animated_render_border_fix"
     bl_label = "Render Border Fix"
@@ -345,15 +345,15 @@ class FixAnimatedRenderBorder(bpy.types.Operator):
 
 
 def register():
-    bpy.utils.register_class(AnimatedRenderBorderPanel)
-    bpy.utils.register_class(RenderAnimatedRenderBorder)
-    bpy.utils.register_class(FixAnimatedRenderBorder)
+    bpy.utils.register_class(RENDER_PT_animated_render_border)
+    bpy.utils.register_class(RENDER_OT_animated_render_border_render)
+    bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
     
     
 def unregister():
-    bpy.utils.unregister_class(AnimatedRenderBorderPanel)
-    bpy.utils.unregister_class(RenderAnimatedRenderBorder)
-    bpy.utils.unregister_class(FixAnimatedRenderBorder)
+    bpy.utils.unregister_class(RENDER_PT_animated_render_border)
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_render)
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_fix)
     bpy.utils.unregister_class(animatedBorderRenderProperties)
     
     del bpy.types.Scene.animated_render_border
