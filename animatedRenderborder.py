@@ -359,6 +359,8 @@ def unregister():
     bpy.utils.unregister_class(FixAnimatedRenderBorder)
     bpy.utils.unregister_class(animatedBorderRenderProperties)
     
+    del bpy.types.Scene.animated_render_border
+    
 
 if __name__ == "__main__":
     register()
