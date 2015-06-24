@@ -49,8 +49,7 @@ def refreshTracking(self,context):
 
 def updateBoundingBox(self,context):
     
-    scene = bpy.context.scene
-    border = scene.animated_render_border
+    border = context.scene.animated_render_border
         
     if border.type == "Object" and border.object != "":
         
@@ -68,8 +67,7 @@ def updateBoundingBox(self,context):
 
 def toggleTracking(self,context):
     
-    scene = bpy.context.scene
-    border = scene.animated_render_border
+    border = context.scene.animated_render_border
     
     if border.enable and not context.scene.render.use_border:
         
@@ -89,8 +87,7 @@ def toggleTracking(self,context):
           
 def updateObjectList(scene):
         
-    scene = bpy.context.scene
-    border = scene.animated_render_border     
+    border = bpy.context.scene.animated_render_border     
         
     border.mesh_objects.clear()
     for object in bpy.context.scene.objects:
@@ -264,7 +261,7 @@ class AnimatedRenderBorderPanel(bpy.types.Panel):
         row.prop(scene.animated_render_border, "type",expand=True)
         row = column.row()
         
-        if scene.animated_render_border.type == "Object":
+        if border.type == "Object":
             row.label(text="Mesh object to track:")
             row = column.row()
             row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
