@@ -71,7 +71,7 @@ def toggleTracking(self,context):
     scene = bpy.context.scene
     border = scene.animated_render_border
     
-    if border.enable == True and context.scene.render.use_border == False:
+    if border.enable and not context.scene.render.use_border:
         
         context.scene.render.use_border = True
 
