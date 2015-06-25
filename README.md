@@ -2,7 +2,7 @@
 
 In essence, this addon allows the 'border render' feature of blender to be animated by tracking a selected object or group. So, if you have an animation that has an object animating across the screen the border render will update every frame so that the object (or group of objects) is always encompassed. 
 
-There are a few reasons why you might want to animate the border render. You might want to render a preview of an animated object but don't want to waste processing time on background objects. Or, apart from the tracked objects the image has a transpare background and you want to skip rendering the transparent areas (which, despite being empty still take time to process) and focus all processing power on the selected object.
+There are a few reasons why you might want to animate the border render. You might want to render a preview of an animated object but don't want to waste processing time on background objects. Or, apart from the tracked objects the image has a transparent background and you want to skip rendering the transparent areas (which, despite being empty still take time to process) and focus all processing power on the selected object.
 
 The tracking of an object/group is either done by looking at the bounding box of each object or, the slower, but more precise method of looking at each vertex of the object and calculating how large the border render will need to be to cover the object/group.
 
