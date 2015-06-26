@@ -51,18 +51,18 @@ def updateBoundingBox(self,context):
     
     border = context.scene.animated_render_border
         
-    if border.type == "Object" and border.object != "":
+    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:  #If object is chosen as object but renamed, it can't be tracked.
         
         bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
         
-    elif border.type == "Group" and border.group != "":
+    elif border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
         
         for object in bpy.data.groups[border.group].objects:
             
             if object.type == "MESH":
                
                 object.show_bounds = border.draw_bounding_box
-                            
+                                            
 
 
 def toggleTracking(self,context):
@@ -134,13 +134,14 @@ def animate_render_border(scene):
     camera = bpy.data.objects['Camera']
     border = scene.animated_render_border
     
-    if border.type == "Object" and border.object != "" or \
-       border.type == "Group" and border.group != "":
+    #If object is chosen but consequently renamed, it can't be tracked.
+    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects or \
+       border.type == "Group" and border.group != "" and border.group in bpy.data.groups: 
     
         objs = [] 
-        if border.type == "Object": 
+        if border.type == "Object":  
             objs = [border.object]
-        else:
+        elif border.type == "Group":
             objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
         
         
@@ -178,8 +179,8 @@ def animate_render_border(scene):
         scene.render.border_min_x = minX - (margin/100)
         scene.render.border_max_x = maxX + (margin/100)
         scene.render.border_min_y = minY - (margin/100)
-        scene.render.border_max_y = maxY + (margin/100)  
-    
+        scene.render.border_max_y = maxY + (margin/100)
+           
     
 
 ###########Operators############################################################
