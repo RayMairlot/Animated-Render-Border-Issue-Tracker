@@ -141,7 +141,7 @@ def animate_render_border(scene):
         objs = [] 
         if border.type == "Object":  
             objs = [border.object]
-        elif border.type == "Group":
+        else:
             objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
         
         
