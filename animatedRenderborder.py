@@ -28,6 +28,7 @@ bl_info = {
 import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
+from bpy.app.handlers import persistent
 
 
 #######Update functions########################################################
@@ -75,25 +76,26 @@ def toggleTracking(self,context):
 
     if border.enable:      
         updateObjectList(self)
-        bpy.app.handlers.frame_change_pre.append(animate_render_border)
-        bpy.app.handlers.scene_update_post.append(updateObjectList)
-    else:
-        bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
-        bpy.app.handlers.scene_update_post.remove(updateObjectList)
+#        bpy.app.handlers.frame_change_pre.append(animate_render_border)
+#        bpy.app.handlers.scene_update_post.append(updateObjectList)
+#    else:
+#        bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
+#        bpy.app.handlers.scene_update_post.remove(updateObjectList)
         
     updateFrame(self,context)
           
           
-          
+@persistent          
 def updateObjectList(scene):
             
     border = bpy.context.scene.animated_render_border     
-        
-    border.mesh_objects.clear()
-    for object in bpy.context.scene.objects:
-        if object.type == "MESH":
-            meshAdd = border.mesh_objects.add()
-            meshAdd.name = object.name                                          
+    
+    if border.enable:        
+        border.mesh_objects.clear()
+        for object in bpy.context.scene.objects:
+            if object.type == "MESH":
+                meshAdd = border.mesh_objects.add()
+                meshAdd.name = object.name                                          
 
 
 
@@ -127,59 +129,60 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 
 #########Frame Handler########################################################
 
-
+@persistent
 def animate_render_border(scene):
     
     scene = bpy.context.scene
     camera = bpy.data.objects['Camera']
     border = scene.animated_render_border
     
-    #If object is chosen but consequently renamed, it can't be tracked.
-    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects or \
-       border.type == "Group" and border.group != "" and border.group in bpy.data.groups: 
-    
-        objs = [] 
-        if border.type == "Object":  
-            objs = [border.object]
-        else:
-            objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
+    if border.enable:
+        #If object is chosen but consequently renamed, it can't be tracked.
+        if border.type == "Object" and border.object != "" and border.object in bpy.data.objects or \
+           border.type == "Group" and border.group != "" and border.group in bpy.data.groups: 
         
-        
-        coords_2d = []
-        for obj in objs:
+            objs = [] 
+            if border.type == "Object":  
+                objs = [border.object]
+            elif border.type == "Group":
+                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
             
-            verts = []
-            if border.use_bounding_box:
-                verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
-            else:
-                verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
-                    
-            wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
-            for coord in verts:
-                coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
-
-        minX = 1
-        maxX = 0
-        minY = 1
-        maxY = 0
-
-        for x, y, distance_to_lens in coords_2d:
             
-            if x<minX:
-                minX = x
-            if x>maxX:
-                maxX = x
-            if y<minY:
-                minY = y
-            if y>maxY:
-                maxY = y                 
+            coords_2d = []
+            for obj in objs:
                 
-        margin = border.margin
-            
-        scene.render.border_min_x = minX - (margin/100)
-        scene.render.border_max_x = maxX + (margin/100)
-        scene.render.border_min_y = minY - (margin/100)
-        scene.render.border_max_y = maxY + (margin/100)
+                verts = []
+                if border.use_bounding_box:
+                    verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
+                else:
+                    verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
+                        
+                wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
+                for coord in verts:
+                    coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
+
+            minX = 1
+            maxX = 0
+            minY = 1
+            maxY = 0
+
+            for x, y, distance_to_lens in coords_2d:
+                
+                if x<minX:
+                    minX = x
+                if x>maxX:
+                    maxX = x
+                if y<minY:
+                    minY = y
+                if y>maxY:
+                    maxY = y                 
+                    
+            margin = border.margin
+                
+            scene.render.border_min_x = minX - (margin/100)
+            scene.render.border_max_x = maxX + (margin/100)
+            scene.render.border_min_y = minY - (margin/100)
+            scene.render.border_max_y = maxY + (margin/100)
            
     
 
@@ -344,12 +347,20 @@ class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
 
 
 def register():
+    
+    bpy.app.handlers.frame_change_pre.append(animate_render_border)
+    bpy.app.handlers.scene_update_post.append(updateObjectList)
+    
     bpy.utils.register_class(RENDER_PT_animated_render_border)
     bpy.utils.register_class(RENDER_OT_animated_render_border_render)
     bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
     
     
 def unregister():
+    
+    bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
+    bpy.app.handlers.scene_update_post.remove(updateObjectList)
+    
     bpy.utils.unregister_class(RENDER_PT_animated_render_border)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_render)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_fix)
