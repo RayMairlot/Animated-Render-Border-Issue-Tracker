@@ -348,7 +348,7 @@ class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
 
 def register():
     
-    bpy.app.handlers.frame_change_pre.append(animate_render_border)
+    bpy.app.handlers.frame_change_post.append(animate_render_border)
     bpy.app.handlers.scene_update_post.append(updateObjectList)
     
     bpy.utils.register_class(RENDER_PT_animated_render_border)
@@ -358,7 +358,7 @@ def register():
     
 def unregister():
     
-    bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
+    bpy.app.handlers.frame_change_post.remove(animate_render_border)        
     bpy.app.handlers.scene_update_post.remove(updateObjectList)
     
     bpy.utils.unregister_class(RENDER_PT_animated_render_border)
