@@ -193,6 +193,7 @@ def mainRender(context):
                 
     oldStart = context.scene.frame_start
     oldEnd = context.scene.frame_end
+    oldCurrent = context.scene.frame_current
     
     context.window_manager.progress_begin(0,oldEnd)
     
@@ -209,7 +210,8 @@ def mainRender(context):
         bpy.ops.render.render(animation=True)
     
     context.window_manager.progress_end()
-        
+    
+    context.scene.frame_current = oldCurrent    
     context.scene.frame_start = oldStart
     context.scene.frame_end = oldEnd
     
