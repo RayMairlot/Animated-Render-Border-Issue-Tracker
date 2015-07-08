@@ -133,7 +133,7 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 def animate_render_border(scene):
     
     scene = bpy.context.scene
-    camera = bpy.data.objects['Camera']
+    camera = scene.camera
     border = scene.animated_render_border
     
     if border.enable:
