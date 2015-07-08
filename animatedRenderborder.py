@@ -314,21 +314,34 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
 
     def draw(self, context):
         layout = self.layout
-                    
-        row = layout.row()
-        row.label("Once the render has started it cannot be easily stopped unless", icon="INFO")
-        row = layout.row()
-        row.label("you close Blender. Make sure your work is saved if necessary.")  
-        row = layout.row()
+
+        if bpy.context.scene.camera:
+                                
+            row = layout.row()
+            row.label("Once the render has started it cannot be easily stopped unless", icon="INFO")
+            row = layout.row()
+            row.label("you close Blender. Make sure your work is saved if necessary.")  
+            row = layout.row()
+                
+            row.label("Press 'OK' to render or press the 'Esc' key on the keyboard")
+            row = layout.row()
+            row.label("to cancel.")  
             
-        row.label("Press 'OK' to render or press the 'Esc' key on the keyboard")
-        row = layout.row()
-        row.label("to cancel.")  
+        else:
+            
+            row = layout.row()
+            row.label("No active camera to render from", icon="ERROR")        
 
 
     def execute(self, context):
- 
-        mainRender(context)
+        
+        if bpy.context.scene.camera:
+
+            mainRender(context)
+            
+        else:
+            
+            pass
             
         return {'FINISHED'}
     
