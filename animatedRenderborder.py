@@ -53,7 +53,7 @@ def updateBoundingBox(self,context):
     border = context.scene.animated_render_border
         
     if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:  #If object is chosen as object but renamed, it can't be tracked.
-        
+
         bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
         
     elif border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
@@ -71,7 +71,6 @@ def toggleTracking(self,context):
     border = context.scene.animated_render_border
     
     if border.enable and not context.scene.render.use_border:
-        
         context.scene.render.use_border = True
 
     if border.enable:      
@@ -146,7 +145,6 @@ def animate_render_border(scene):
                 objs = [border.object]
             elif border.type == "Group":
                 objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
-            
             
             coords_2d = []
             for obj in objs:
@@ -246,7 +244,6 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         
         layout.active = scene.animated_render_border.enable
         
-        
         if not context.scene.render.use_border and border.enable:
             row = layout.row()
             split = row.split(0.7)
@@ -258,9 +255,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             column = split.column()         
             column.operator("render.animated_render_border_fix", text="Fix")
             
-        
         if scene.camera.type != "CAMERA":
-            
             row = layout.row()
             row.label(text="Active camera must be a Camera", icon="ERROR")
             row = layout.row()
@@ -287,9 +282,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
            border.type == "Group" and border.group == "":
             
             enabled = False
-            
         else:
-            
             enabled = True
         
         #New column is to separate it from previous row, it needs to be able to be disabled.
@@ -324,8 +317,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
 
-        if bpy.context.scene.camera:
-                                
+        if bpy.context.scene.camera:               
             row = layout.row()
             row.label("Once the render has started it cannot be easily stopped unless", icon="INFO")
             row = layout.row()
@@ -335,9 +327,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
             row.label("Press 'OK' to render or press the 'Esc' key on the keyboard")
             row = layout.row()
             row.label("to cancel.")  
-            
         else:
-            
             row = layout.row()
             row.label("No active camera to render from", icon="ERROR")        
 
@@ -345,11 +335,8 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
     def execute(self, context):
         
         if bpy.context.scene.camera:
-
             mainRender(context)
-            
         else:
-            
             pass
             
         return {'FINISHED'}
