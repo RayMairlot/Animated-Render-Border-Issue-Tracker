@@ -259,7 +259,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = layout.row()
             row.label(text="Active camera must be a Camera", icon="ERROR")
             row = layout.row()
-            row.label(text="object, not a "+scene.camera.type.lower().capitalize()+".", icon="SCULPT_DYNTOPO")
+            row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
         
         column = layout.column()
         column.active = context.scene.render.use_border and border.enable
