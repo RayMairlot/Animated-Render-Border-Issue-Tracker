@@ -195,7 +195,7 @@ def mainRender(context):
     
     context.window_manager.progress_begin(0,oldEnd)
     
-    for i in range(1, oldEnd+1):
+    for i in range(oldStart, oldEnd+1):
     
         context.window_manager.progress_update(i)
                 
