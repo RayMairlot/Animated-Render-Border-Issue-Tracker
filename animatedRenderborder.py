@@ -75,11 +75,6 @@ def toggleTracking(self,context):
 
     if border.enable:      
         updateObjectList(self)
-#        bpy.app.handlers.frame_change_pre.append(animate_render_border)
-#        bpy.app.handlers.scene_update_post.append(updateObjectList)
-#    else:
-#        bpy.app.handlers.frame_change_pre.remove(animate_render_border)        
-#        bpy.app.handlers.scene_update_post.remove(updateObjectList)
         
     updateFrame(self,context)
           
