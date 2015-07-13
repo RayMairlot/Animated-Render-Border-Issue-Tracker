@@ -347,6 +347,18 @@ class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
         mainFix(context)
             
         return {'FINISHED'}    
+    
+    
+#class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
+#"""Fix the render border by turning on 'Border' rendering"""
+#bl_idname = "render.animated_render_border_fix"
+#bl_label = "Render Border Fix"
+#
+#def execute(self, context):
+# 
+#    mainFix(context)
+#        
+#    return {'FINISHED'}    
 
 
 
