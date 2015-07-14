@@ -113,6 +113,14 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
     enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
+    
+    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", min=0, max=1)
+    
+    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", min=0, max=1)
+
+    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", min=0, max=1)
+
+    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", min=0, max=1)    
 
 
 bpy.utils.register_class(animatedBorderRenderProperties)
@@ -226,6 +234,23 @@ def mainRender(context):
 def mainFix(context):
                 
     context.scene.render.use_border = True
+    
+    
+def insertKeyframe(context):
+    
+    context.scene.keyframe_insert(data_path="animated_render_border.border_max_x")  
+    context.scene.keyframe_insert(data_path="animated_render_border.border_min_x")  
+    context.scene.keyframe_insert(data_path="animated_render_border.border_min_y")  
+    context.scene.keyframe_insert(data_path="animated_render_border.border_max_y")    
+    
+    
+def deleteKeyframe(context):
+
+    context.scene.keyframe_delete(data_path="animated_render_border.border_max_x")  
+    context.scene.keyframe_delete(data_path="animated_render_border.border_min_x")  
+    context.scene.keyframe_delete(data_path="animated_render_border.border_min_y")  
+    context.scene.keyframe_delete(data_path="animated_render_border.border_max_y")   
+    
 
 
 ###########UI################################################################
@@ -273,7 +298,24 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         
         column = layout.column()
         column.active = context.scene.render.use_border and border.enable
-                                
+        
+        col = column.column(align=True)
+        col.operator("render.animated_render_border_insert_keyframe", text="Insert Keyframe", icon="KEY_HLT")
+        col.operator("render.animated_render_border_delete_keyframe", text="Delete Keyframe", icon="KEY_DEHLT")    
+        col.label(text="Border Vales:")          
+        row = column.row()
+        row.label(text="")
+        row.prop(scene.animated_render_border, "border_max_x", text="Max Y")  
+        row.label(text="")
+        row = column.row(align=True)
+        row.prop(scene.animated_render_border, "border_min_x", text="Min X")  
+        row.label(text="")
+        row.prop(scene.animated_render_border, "border_max_x", text="Max X")  
+        row = column.row()
+        row.label(text="")
+        row.prop(scene.animated_render_border, "border_min_y", text="Min Y")        
+        row.label(text="")                                
+        
         row = column.row()
         row.prop(scene.animated_render_border, "type",expand=True)
         row = column.row()
@@ -364,17 +406,29 @@ class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
         return {'FINISHED'}    
     
     
-#class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
-#"""Fix the render border by turning on 'Border' rendering"""
-#bl_idname = "render.animated_render_border_fix"
-#bl_label = "Render Border Fix"
-#
-#def execute(self, context):
-# 
-#    mainFix(context)
-#        
-#    return {'FINISHED'}    
+class RENDER_OT_animated_render_border_insert_keyframe(bpy.types.Operator):
+    """Insert a keyframe for all the render border values"""
+    bl_idname = "render.animated_render_border_insert_keyframe"
+    bl_label = "Insert Animated Render Border Keyframe"
 
+    def execute(self, context):
+     
+        insertKeyframe(context)
+            
+        return {'FINISHED'}  
+    
+    
+class RENDER_OT_animated_render_border_delete_keyframe(bpy.types.Operator):
+    """Delete a keyframe for all the render border values"""
+    bl_idname = "render.animated_render_border_delete_keyframe"
+    bl_label = "Delete Animated Render Border Keyframe"
+
+    def execute(self, context):
+     
+        deleteKeyframe(context)
+            
+        return {'FINISHED'}       
+            
 
 
 def register():
@@ -385,6 +439,8 @@ def register():
     bpy.utils.register_class(RENDER_PT_animated_render_border)
     bpy.utils.register_class(RENDER_OT_animated_render_border_render)
     bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
+    bpy.utils.register_class(RENDER_OT_animated_render_border_insert_keyframe)   
+    bpy.utils.register_class(RENDER_OT_animated_render_border_delete_keyframe)        
     
     
 def unregister():
@@ -395,6 +451,8 @@ def unregister():
     bpy.utils.unregister_class(RENDER_PT_animated_render_border)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_render)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_fix)
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_insert_keyframe)    
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)        
     bpy.utils.unregister_class(animatedBorderRenderProperties)
     
     del bpy.types.Scene.animated_render_border
