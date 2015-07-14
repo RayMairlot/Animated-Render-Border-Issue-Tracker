@@ -184,12 +184,12 @@ def animate_render_border(scene):
                 if y>maxY:
                     maxY = y
                                         
-            margin = border.margin
+            margin = border.margin/100
                 
-            scene.render.border_min_x = minX - (margin/100)
-            scene.render.border_max_x = maxX + (margin/100)
-            scene.render.border_min_y = minY - (margin/100)
-            scene.render.border_max_y = maxY + (margin/100)
+            scene.render.border_min_x = minX - margin
+            scene.render.border_max_x = maxX + margin
+            scene.render.border_min_y = minY - margin
+            scene.render.border_max_y = maxY + margin
            
     
 
