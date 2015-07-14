@@ -167,16 +167,13 @@ def animate_render_border(scene):
             maxX = 0
             minY = 1
             maxY = 0
-            behind = False
-
+            
             for x, y, distance_to_lens in coords_2d:
-                
-                #Points behind camera will have negative coordinates, this makes them positive
-                x = abs(x)
-                
+                                
+                #Points behind camera will have negative coordinates, this makes them positive                
                 if distance_to_lens<0:
-                    behind = True
-                    y = y *-1               
+                    y = y *-1
+                    x = x *-1               
                 
                 if x<minX:
                     minX = x
@@ -185,8 +182,8 @@ def animate_render_border(scene):
                 if y<minY:
                     minY = y
                 if y>maxY:
-                    maxY = y                 
-                    
+                    maxY = y
+                                        
             margin = border.margin
                 
             scene.render.border_min_x = minX - (margin/100)
