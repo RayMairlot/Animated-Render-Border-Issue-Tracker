@@ -123,6 +123,9 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 
 #########Frame Handler########################################################
 
+#bpy.app.handlers.frame_change_post.clear()
+#bpy.app.handlers.scene_update_post.clear()
+
 @persistent
 def animate_render_border(scene):
     
@@ -158,8 +161,16 @@ def animate_render_border(scene):
             maxX = 0
             minY = 1
             maxY = 0
+            behind = False
 
             for x, y, distance_to_lens in coords_2d:
+                
+                #Points behind camera will have negative coordinates, this makes them positive
+                x = abs(x)
+                
+                if distance_to_lens<0:
+                    behind = True
+                    y = y *-1               
                 
                 if x<minX:
                     minX = x
