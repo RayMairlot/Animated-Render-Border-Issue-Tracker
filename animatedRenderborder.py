@@ -123,8 +123,8 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 
 #########Frame Handler########################################################
 
-#bpy.app.handlers.frame_change_post.clear()
-#bpy.app.handlers.scene_update_post.clear()
+bpy.app.handlers.frame_change_post.clear()
+bpy.app.handlers.scene_update_post.clear()
 
 @persistent
 def animate_render_border(scene):
@@ -133,7 +133,13 @@ def animate_render_border(scene):
     camera = scene.camera
     border = scene.animated_render_border
     
-    if border.enable and camera.type == "CAMERA":
+    cameraExists = False
+    
+    if camera:
+        if camera.type == "CAMERA":
+            cameraExists = True
+    
+    if border.enable and cameraExists:
         #If object is chosen but consequently renamed, it can't be tracked.
         if border.type == "Object" and border.object != "" and border.object in bpy.data.objects or \
            border.type == "Group" and border.group != "" and border.group in bpy.data.groups: 
@@ -260,12 +266,13 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             column = split.column()         
             column.operator("render.animated_render_border_fix", text="Fix")
-            
-        if scene.camera.type != "CAMERA":
-            row = layout.row()
-            row.label(text="Active camera must be a Camera", icon="ERROR")
-            row = layout.row()
-            row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
+        
+        if scene.camera:    
+            if scene.camera.type != "CAMERA":
+                row = layout.row()
+                row.label(text="Active camera must be a Camera", icon="ERROR")
+                row = layout.row()
+                row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
         
         column = layout.column()
         column.active = context.scene.render.use_border and border.enable
