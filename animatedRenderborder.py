@@ -77,6 +77,29 @@ def toggleTracking(self,context):
         updateObjectList(self)
         
     updateFrame(self,context)
+
+
+
+def updateBorderWithMinX(self,context):
+
+    border = bpy.context.scene.animated_render_border     
+    context.scene.render.border_min_x = border.border_min_x
+     
+def updateBorderWithMaxX(self,context):
+
+    border = bpy.context.scene.animated_render_border     
+    context.scene.render.border_max_x = border.border_max_x
+    
+def updateBorderWithMinY(self,context):
+
+    border = bpy.context.scene.animated_render_border     
+    context.scene.render.border_min_y = border.border_min_y
+    
+def updateBorderWithMaxY(self,context):
+
+    border = bpy.context.scene.animated_render_border     
+    context.scene.render.border_max_y = border.border_max_y            
+
           
           
 @persistent          
@@ -90,7 +113,6 @@ def updateObjectList(scene):
             if object.type == "MESH":
                 meshAdd = border.mesh_objects.add()
                 meshAdd.name = object.name                                          
-
 
 
 #########Properties###########################################################
@@ -117,13 +139,13 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
     
-    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", min=0, max=1)
+    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", min=0, max=1, update=updateBorderWithMinX)
     
-    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", min=0, max=1)
+    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", min=0, max=1, update=updateBorderWithMaxX)
 
-    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", min=0, max=1)
+    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", min=0, max=1, update=updateBorderWithMinY)
 
-    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", min=0, max=1)    
+    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", min=0, max=1, update=updateBorderWithMaxY)    
 
 
 bpy.utils.register_class(animatedBorderRenderProperties)
@@ -201,8 +223,15 @@ def animate_render_border(scene):
             scene.render.border_max_x = maxX + margin
             scene.render.border_min_y = minY - margin
             scene.render.border_max_y = maxY + margin
+            
+        elif border.type == "Keyframe":
+            
+            scene.render.border_min_x = border.border_min_x
+            scene.render.border_max_x = border.border_max_x
+            scene.render.border_min_y = border.border_min_y
+            scene.render.border_max_y = border.border_max_y
+          
            
-    
 
 ###########Operators############################################################
 
@@ -241,16 +270,24 @@ def mainFix(context):
     
 def insertKeyframe(context):
     
-    context.scene.keyframe_insert(data_path="animated_render_border.border_max_x")  
+    border = context.scene.animated_render_border
+    
+    border.border_min_x = context.scene.render.border_min_x
+    border.border_min_y = context.scene.render.border_min_y
+    border.border_max_x = context.scene.render.border_max_x
+    border.border_min_y = context.scene.render.border_min_y
+    border.border_max_y = context.scene.render.border_max_y            
+    
     context.scene.keyframe_insert(data_path="animated_render_border.border_min_x")  
+    context.scene.keyframe_insert(data_path="animated_render_border.border_max_x")  
     context.scene.keyframe_insert(data_path="animated_render_border.border_min_y")  
     context.scene.keyframe_insert(data_path="animated_render_border.border_max_y")    
     
     
 def deleteKeyframe(context):
 
-    context.scene.keyframe_delete(data_path="animated_render_border.border_max_x")  
     context.scene.keyframe_delete(data_path="animated_render_border.border_min_x")  
+    context.scene.keyframe_delete(data_path="animated_render_border.border_max_x")  
     context.scene.keyframe_delete(data_path="animated_render_border.border_min_y")  
     context.scene.keyframe_delete(data_path="animated_render_border.border_max_y")   
     
@@ -316,7 +353,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             col.label(text="Border Vales:")          
             row = column.row()
             row.label(text="")
-            row.prop(scene.animated_render_border, "border_max_x", text="Max Y")  
+            row.prop(scene.animated_render_border, "border_max_y", text="Max Y")  
             row.label(text="")
             row = column.row(align=True)
             row.prop(scene.animated_render_border, "border_min_x", text="Min X")  
