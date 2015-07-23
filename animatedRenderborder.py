@@ -104,7 +104,10 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     group = bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
 
-    type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[("Object","Object","Object"),("Group","Group","Group")], update=updateFrame)
+    type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[
+                                                                                                        ("Object","Object","Object"),
+                                                                                                        ("Group","Group","Group"),
+                                                                                                        ("Keyframe","Keyframe","Keyframe")], update=updateFrame)
 
     use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=updateFrame)
 
@@ -297,62 +300,68 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
         
         column = layout.column()
-        column.active = context.scene.render.use_border and border.enable
-        
-        col = column.column(align=True)
-        col.operator("render.animated_render_border_insert_keyframe", text="Insert Keyframe", icon="KEY_HLT")
-        col.operator("render.animated_render_border_delete_keyframe", text="Delete Keyframe", icon="KEY_DEHLT")    
-        col.label(text="Border Vales:")          
-        row = column.row()
-        row.label(text="")
-        row.prop(scene.animated_render_border, "border_max_x", text="Max Y")  
-        row.label(text="")
-        row = column.row(align=True)
-        row.prop(scene.animated_render_border, "border_min_x", text="Min X")  
-        row.label(text="")
-        row.prop(scene.animated_render_border, "border_max_x", text="Max X")  
-        row = column.row()
-        row.label(text="")
-        row.prop(scene.animated_render_border, "border_min_y", text="Min Y")        
-        row.label(text="")                                
-        
         row = column.row()
         row.prop(scene.animated_render_border, "type",expand=True)
         row = column.row()
         
-        if border.type == "Object":
-            row.label(text="Mesh object to track:")
-            row = column.row()
-            row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
-        else:
-            row.label(text="Group to track:")
-            row = column.row()
-            row.prop_search(scene.animated_render_border, "group", bpy.data, "groups", text="")
         
+        if border.type == "Keyframe":
         
-        if border.type == "Object" and border.object == "" or \
-           border.type == "Group" and border.group == "":
+            column = layout.column()
+            column.active = context.scene.render.use_border and border.enable
             
-            enabled = False
-        else:
-            enabled = True
-        
-        #New column is to separate it from previous row, it needs to be able to be disabled.
-        columnMargin = row.column()
-        columnMargin.enabled = enabled    
-        columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
-        
-        row = column.row()
-        row.enabled = enabled       
-        row.prop(scene.animated_render_border, "use_bounding_box", text="Use Bounding Box")
-        
-        row = column.row()
-        row.enabled = enabled           
-        row.prop(scene.animated_render_border, "draw_bounding_box", text="Draw Bounding Box")
+            col = column.column(align=True)
+            col.operator("render.animated_render_border_insert_keyframe", text="Insert Keyframe", icon="KEY_HLT")
+            col.operator("render.animated_render_border_delete_keyframe", text="Delete Keyframe", icon="KEY_DEHLT")    
+            col.label(text="Border Vales:")          
+            row = column.row()
+            row.label(text="")
+            row.prop(scene.animated_render_border, "border_max_x", text="Max Y")  
+            row.label(text="")
+            row = column.row(align=True)
+            row.prop(scene.animated_render_border, "border_min_x", text="Min X")  
+            row.label(text="")
+            row.prop(scene.animated_render_border, "border_max_x", text="Max X")  
+            row = column.row()
+            row.label(text="")
+            row.prop(scene.animated_render_border, "border_min_y", text="Min Y")        
+            row.label(text="")                           
             
-        row = column.row()     
-        row.enabled = enabled      
-        row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")
+        else:
+            
+            if border.type == "Object":
+                row.label(text="Mesh object to track:")
+                row = column.row()
+                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
+            else:
+                row.label(text="Group to track:")
+                row = column.row()
+                row.prop_search(scene.animated_render_border, "group", bpy.data, "groups", text="")
+            
+            
+            if border.type == "Object" and border.object == "" or \
+               border.type == "Group" and border.group == "":
+                
+                enabled = False
+            else:
+                enabled = True
+            
+            #New column is to separate it from previous row, it needs to be able to be disabled.
+            columnMargin = row.column()
+            columnMargin.enabled = enabled    
+            columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
+            
+            row = column.row()
+            row.enabled = enabled       
+            row.prop(scene.animated_render_border, "use_bounding_box", text="Use Bounding Box")
+            
+            row = column.row()
+            row.enabled = enabled           
+            row.prop(scene.animated_render_border, "draw_bounding_box", text="Draw Bounding Box")
+                
+            row = column.row()     
+            row.enabled = enabled      
+            row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")
         
        
 
