@@ -38,13 +38,20 @@ def updateFrame(self,context):
     
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
      
-     
    
 def refreshTracking(self,context):
    
-   bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
+    border = context.scene.animated_render_border
+   
+    if border.type == "Object":
+       
+        if bpy.data.objects[border.object].type in ["FONT"]:
+           
+            border.use_bounding_box = True         
+   
+    bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
-   updateBoundingBox(self,context)       
+    updateBoundingBox(self,context)       
                    
 
 
@@ -60,7 +67,7 @@ def updateBoundingBox(self,context):
         
         for object in bpy.data.groups[border.group].objects:
             
-            if object.type == "MESH":
+            if object.type in ["MESH", "FONT"]:
                
                 object.show_bounds = border.draw_bounding_box
                                             
@@ -110,7 +117,7 @@ def updateObjectList(scene):
     if border.enable:        
         border.mesh_objects.clear()
         for object in bpy.context.scene.objects:
-            if object.type == "MESH":
+            if object.type in ["MESH", "FONT"]:
                 meshAdd = border.mesh_objects.add()
                 meshAdd.name = object.name                                          
 
@@ -181,13 +188,13 @@ def animate_render_border(scene):
             if border.type == "Object":  
                 objs = [border.object]
             elif border.type == "Group":
-                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type =="MESH")
+                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in ["MESH", "FONT"])
             
             coords_2d = []
             for obj in objs:
                 
                 verts = []
-                if border.use_bounding_box:
+                if border.use_bounding_box or bpy.data.objects[obj].type == "FONT":
                     verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
                 else:
                     verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
@@ -378,7 +385,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             if border.type == "Object" and border.object == "" or \
                border.type == "Group" and border.group == "":
-                
+                                
                 enabled = False
             else:
                 enabled = True
@@ -389,7 +396,19 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
             
             row = column.row()
-            row.enabled = enabled       
+            
+            noVertices = False
+            
+            if border.type == "Object":
+                
+                if bpy.data.objects[border.object].type in ["FONT"]:
+                    
+                    noVertices = True
+                                            
+            if noVertices:    
+                row.enabled = False
+            else:
+                row.enabled = True   
             row.prop(scene.animated_render_border, "use_bounding_box", text="Use Bounding Box")
             
             row = column.row()
