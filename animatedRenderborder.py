@@ -390,7 +390,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row = column.row()
                 
                 objectIcon = "OBJECT_DATA"
-                if border.object != "":
+                if border.object != "" and border.object in bpy.data.objects:
                     objectIcon = bpy.data.objects[border.object].type+"_DATA"
                 row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list
             else:
@@ -415,7 +415,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             noVertices = False
             
-            if border.type == "Object" and border.object != "":
+            if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:
                 
                 if bpy.data.objects[border.object].type in ["FONT"]: #Objects without vertices
                     
