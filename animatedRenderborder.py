@@ -376,7 +376,11 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             if border.type == "Object":
                 row.label(text="Mesh object to track:")
                 row = column.row()
-                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon="OBJECT_DATA") #Where my property is, name of property, where list I want is, name of list
+                
+                objectIcon = "OBJECT_DATA"
+                if border.object != "":
+                    objectIcon = bpy.data.objects[border.object].type+"_DATA"
+                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list
             else:
                 row.label(text="Group to track:")
                 row = column.row()
