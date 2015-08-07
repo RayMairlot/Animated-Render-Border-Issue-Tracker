@@ -46,7 +46,7 @@ def refreshTracking(self,context):
    
     if border.type == "Object":
        
-        if bpy.data.objects[border.object].type in ["FONT"]:
+        if bpy.data.objects[border.object].type in ["FONT"]: #Objects that don't have vertices
            
             border.use_bounding_box = True         
    
@@ -68,7 +68,7 @@ def updateBoundingBox(self,context):
         
         for object in bpy.data.groups[border.group].objects:
             
-            if object.type in ["MESH", "FONT"]:
+            if object.type in ["MESH", "FONT", "CURVE"]: #Types of object that can be tracked
                
                 object.show_bounds = border.draw_bounding_box
                                             
@@ -118,7 +118,7 @@ def updateObjectList(scene):
     if border.enable:        
         border.mesh_objects.clear()
         for object in bpy.context.scene.objects:
-            if object.type in ["MESH", "FONT"]:
+            if object.type in ["MESH", "FONT", "CURVE"]: #Types of object that can be tracked
                 meshAdd = border.mesh_objects.add()
                 meshAdd.name = object.name                                          
 
@@ -189,16 +189,23 @@ def animate_render_border(scene):
             if border.type == "Object":  
                 objs = [border.object]
             elif border.type == "Group":
-                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in ["MESH", "FONT"])
+                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in ["MESH", "FONT", "CURVE"]) #Type of objects that can be tracked
             
             coords_2d = []
             for obj in objs:
                 
                 verts = []
-                if border.use_bounding_box or bpy.data.objects[obj].type == "FONT":
+                if border.use_bounding_box or bpy.data.objects[obj].type == "FONT": #Objects that have no vetices
+                
                     verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
-                else:
+                
+                elif bpy.data.objects[obj].type == "MESH":
+                
                     verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
+                
+                elif bpy.data.objects[obj].type == "CURVE":
+                    
+                    verts = (vert.co for spline in bpy.data.objects[obj].data.splines for vert in spline.bezier_points)
                         
                 wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
@@ -406,7 +413,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             if border.type == "Object" and border.object != "":
                 
-                if bpy.data.objects[border.object].type in ["FONT"]:
+                if bpy.data.objects[border.object].type in ["FONT"]: #Objects without vertices
                     
                     noVertices = True
                                             
