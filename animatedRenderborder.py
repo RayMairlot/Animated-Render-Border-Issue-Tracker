@@ -36,8 +36,9 @@ from bpy.app.handlers import persistent
 
 def updateFrame(self,context):
     
-    bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
+    bpy.context.scene.frame_set(bpy.context.scene.frame_current)       
      
+   
    
 def refreshTracking(self,context):
    
@@ -136,7 +137,7 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[
                                                                                                         ("Object","Object","Object"),
                                                                                                         ("Group","Group","Group"),
-                                                                                                        ("Keyframe","Keyframe","Keyframe")], update=updateFrame)
+                                                                                                        ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
 
     use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=updateFrame)
 
