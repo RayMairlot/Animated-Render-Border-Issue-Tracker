@@ -399,7 +399,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             noVertices = False
             
-            if border.type == "Object":
+            if border.type == "Object" and border.object != "":
                 
                 if bpy.data.objects[border.object].type in ["FONT"]:
                     
