@@ -68,7 +68,7 @@ def updateBoundingBox(self,context):
         
         for object in bpy.data.groups[border.group].objects:
             
-            if object.type in ["MESH", "FONT", "CURVE"]: #Types of object that can be tracked
+            if object.type in ["MESH", "FONT", "CURVE", "SURFACE"]: #Types of object that can be tracked
                
                 object.show_bounds = border.draw_bounding_box
                                             
@@ -118,7 +118,7 @@ def updateObjectList(scene):
     if border.enable:        
         border.mesh_objects.clear()
         for object in bpy.context.scene.objects:
-            if object.type in ["MESH", "FONT", "CURVE"]: #Types of object that can be tracked
+            if object.type in ["MESH", "FONT", "CURVE", "SURFACE"]: #Types of object that can be tracked
                 meshAdd = border.mesh_objects.add()
                 meshAdd.name = object.name                                          
 
@@ -189,13 +189,13 @@ def animate_render_border(scene):
             if border.type == "Object":  
                 objs = [border.object]
             elif border.type == "Group":
-                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in ["MESH", "FONT", "CURVE"]) #Type of objects that can be tracked
+                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in ["MESH", "FONT", "CURVE", "SURFACE"]) #Type of objects that can be tracked
             
             coords_2d = []
             for obj in objs:
                 
                 verts = []
-                if border.use_bounding_box or bpy.data.objects[obj].type == "FONT": #Objects that have no vetices
+                if border.use_bounding_box or bpy.data.objects[obj].type == "FONT": #Objects that have no vertices
                 
                     verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
                 
@@ -206,6 +206,10 @@ def animate_render_border(scene):
                 elif bpy.data.objects[obj].type == "CURVE":
                     
                     verts = (vert.co for spline in bpy.data.objects[obj].data.splines for vert in spline.bezier_points)
+                
+                elif bpy.data.objects[obj].type == "SURFACE":
+                    
+                    verts = (vert.co for spline in bpy.data.objects[obj].data.splines for vert in spline.points)
                         
                 wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
