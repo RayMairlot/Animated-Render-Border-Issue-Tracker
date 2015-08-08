@@ -30,8 +30,8 @@ from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 from bpy.app.handlers import persistent
 
-trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY"]
-noVertexObjectTypes = ["FONT", "META", "EMPTY"]
+trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER"]
+noVertexObjectTypes = ["FONT", "META", "EMPTY", "SPEAKER"]
 
 #######Update functions########################################################
 
@@ -398,6 +398,10 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 objectIcon = "OBJECT_DATA"
                 if border.object != "" and border.object in bpy.data.objects:
                     objectIcon = bpy.data.objects[border.object].type+"_DATA"
+                    
+                    if bpy.data.objects[border.object].type == "SPEAKER":   
+                        objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
+                    
                 row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list
             else:
                 row.label(text="Group to track:")
