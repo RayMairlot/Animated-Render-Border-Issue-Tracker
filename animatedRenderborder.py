@@ -30,8 +30,8 @@ from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 from bpy.app.handlers import persistent
 
-trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER", "CAMERA"]
-noVertexObjectTypes = ["FONT", "META", "EMPTY", "SPEAKER", "CAMERA"]
+trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER", "CAMERA", "LAMP"]
+noVertexObjectTypes = ["FONT", "META", "EMPTY", "SPEAKER", "CAMERA", "LAMP"]
 
 #######Update functions########################################################
 
