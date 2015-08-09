@@ -29,8 +29,9 @@ import bpy
 from mathutils import Vector
 from bpy_extras.object_utils import world_to_camera_view
 from bpy.app.handlers import persistent
+from itertools import chain
 
-trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER", "CAMERA", "LAMP"]
+trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER", "CAMERA", "LAMP", "ARMATURE"]
 noVertexObjectTypes = ["FONT", "META", "EMPTY", "SPEAKER", "CAMERA", "LAMP"]
 
 #######Update functions########################################################
@@ -216,6 +217,10 @@ def animate_render_border(scene):
                 elif bpy.data.objects[obj].type == "LATTICE":
                 
                     verts = (vert.co for vert in bpy.data.objects[obj].data.points)
+                    
+                elif bpy.data.objects[obj].type == "ARMATURE":
+
+                    verts = (chain.from_iterable((bone.head, bone.tail) for bone in bpy.data.objects[obj].pose.bones))
                         
                 wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
