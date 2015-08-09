@@ -133,8 +133,6 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     
     mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    armature_bones = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
-
     object = bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
     
     bone = bpy.props.StringProperty(description = "The bone to track", update=refreshTracking)
