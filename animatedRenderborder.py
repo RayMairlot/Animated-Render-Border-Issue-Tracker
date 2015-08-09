@@ -437,13 +437,14 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin.enabled = enabled    
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
             
-            if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object":
-    
-               row = column.row()
-               row.label(text="Bone to track (optional):")
-               row = column.row()
-               row.prop_search(scene.animated_render_border, "bone", bpy.data.objects[border.object].data, "bones", text="", icon="BONE_DATA") #Where my property is, name of property, where list I want is, name of list
-               row.label(text="")    
+            if border.object != "":
+                if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object" :
+        
+                   row = column.row()
+                   row.label(text="Bone to track (optional):")
+                   row = column.row()
+                   row.prop_search(scene.animated_render_border, "bone", bpy.data.objects[border.object].data, "bones", text="", icon="BONE_DATA") #Where my property is, name of property, where list I want is, name of list
+                   row.label(text="")    
                 
             row = column.row()
             
@@ -455,7 +456,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     
                     noVertices = True
                                             
-            if noVertices:    
+            if noVertices or border.object == "":    
                 row.enabled = False
             else:
                 row.enabled = True   
