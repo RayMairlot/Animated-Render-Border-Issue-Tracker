@@ -407,7 +407,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         else:
             
             if border.type == "Object":
-                row.label(text="Mesh object to track:")
+                row.label(text="Object to track:")
                 row = column.row()
                 
                 objectIcon = "OBJECT_DATA"
