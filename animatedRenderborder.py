@@ -132,8 +132,12 @@ def updateObjectList(scene):
 class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     
     mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    
+    armature_bones = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
 
     object = bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
+    
+    bone = bpy.props.StringProperty(description = "The bone to track", update=refreshTracking)
 
     group = bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
 
@@ -220,7 +224,13 @@ def animate_render_border(scene):
                     
                 elif bpy.data.objects[obj].type == "ARMATURE":
 
-                    verts = (chain.from_iterable((bone.head, bone.tail) for bone in bpy.data.objects[obj].pose.bones))
+                    if border.bone == "":
+                        
+                        verts = (chain.from_iterable((bone.head, bone.tail) for bone in bpy.data.objects[obj].pose.bones))
+                        
+                    else:
+                        bone = bpy.data.objects[border.object].pose.bones[border.bone]
+                        verts = [bone.head, bone.tail]
                         
                 wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
@@ -407,7 +417,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     if bpy.data.objects[border.object].type == "SPEAKER":   
                         objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
                     
-                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list
+                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
+                
             else:
                 row.label(text="Group to track:")
                 row = column.row()
@@ -426,6 +437,14 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin.enabled = enabled    
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
             
+            if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object":
+    
+               row = column.row()
+               row.label(text="Bone to track (optional):")
+               row = column.row()
+               row.prop_search(scene.animated_render_border, "bone", bpy.data.objects[border.object].data, "bones", text="", icon="BONE_DATA") #Where my property is, name of property, where list I want is, name of list
+               row.label(text="")    
+                
             row = column.row()
             
             noVertices = False
