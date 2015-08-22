@@ -218,7 +218,7 @@ def animate_render_border(scene):
                     
                 elif bpy.data.objects[obj].type == "LATTICE":
                 
-                    verts = (vert.co for vert in bpy.data.objects[obj].data.points)
+                    verts = (vert.co_deform for vert in bpy.data.objects[obj].data.points)
                     
                 elif bpy.data.objects[obj].type == "ARMATURE":
 
