@@ -31,8 +31,8 @@ from bpy_extras.object_utils import world_to_camera_view
 from bpy.app.handlers import persistent
 from itertools import chain
 
-trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "EMPTY", "SPEAKER", "CAMERA", "LAMP", "ARMATURE"]
-noVertexObjectTypes = ["FONT", "META", "EMPTY", "SPEAKER", "CAMERA", "LAMP"]
+trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "LAMP", "ARMATURE"] #EMPTY, CAMERA and SPEAKER objects cannot currently be tracked.
+noVertexObjectTypes = ["FONT", "META", "LAMP"]
 
 #######Update functions########################################################
 
