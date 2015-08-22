@@ -412,8 +412,9 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 if border.object != "" and border.object in bpy.data.objects:
                     objectIcon = bpy.data.objects[border.object].type+"_DATA"
                     
-                    if bpy.data.objects[border.object].type == "SPEAKER":   
-                        objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
+                    #Removed as speaker objects cannot be tracked
+                    #if bpy.data.objects[border.object].type == "SPEAKER":   
+                    #    objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
                     
                 row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
                 

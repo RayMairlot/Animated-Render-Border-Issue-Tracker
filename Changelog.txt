@@ -1,2 +1,5 @@
 Fixed bug where points behind camera were incorrectly calculated
+
 As an alternative to 'tracking' objects, the border and it's invidividual values can now be keyframed.
+
+Now FONT, CURVE, SURFACE, META, LATTICE, LAMP and ARMATURE objects can be tracked, in addition to MESH objects. Font, META and LAMP objects can only be tracked via their bouding boxes, other objects have an equivalent of vertices. 
