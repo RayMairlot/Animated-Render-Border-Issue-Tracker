@@ -273,33 +273,39 @@ def animate_render_border(scene):
 
 ###########Operators############################################################
 
-
-def mainRender(context):
+def render(self, context):
+    
+    if self.counter == self.oldEnd+1:
+        
+        self.finished = True
+        
+    else:
+        
+        print("Rendering frame "+str(self.counter))
                 
-    oldStart = context.scene.frame_start
-    oldEnd = context.scene.frame_end
-    oldCurrent = context.scene.frame_current
-    
-    context.window_manager.progress_begin(0,oldEnd)
-    
-    for i in range(oldStart, oldEnd+1):
-    
-        context.window_manager.progress_update(i)
-                
-        context.scene.frame_set(i)
+        context.scene.frame_set(self.counter)
         animate_render_border(context.scene)
         
-        context.scene.frame_start = i
-        context.scene.frame_end = i
+        context.scene.frame_start = self.counter
+        context.scene.frame_end = self.counter
          
         bpy.ops.render.render(animation=True)
+        
+        context.window_manager.progress_update(self.counter)
+        
+        self.counter +=1
+        
+        
+def endRender(self, context):
     
+    context.scene.frame_current = self.oldCurrent    
+    context.scene.frame_start = self.oldStart
+    context.scene.frame_end = self.oldEnd
+    
+    context.window_manager.event_timer_remove(self.timer)
+    self.timer = None
     context.window_manager.progress_end()
-    
-    context.scene.frame_current = oldCurrent    
-    context.scene.frame_start = oldStart
-    context.scene.frame_end = oldEnd
-    
+   
     
 def mainFix(context):
                 
@@ -475,38 +481,75 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
     """Render the sequence using the animated render border"""
     bl_idname = "render.animated_render_border_render"
     bl_label = "Render Animation"
+    
+    finished = False
+    counter = 0
+    timer = None
+    oldStart = 0
+    oldEnd = 0
+    oldCurrent = 0
 
-    def invoke(self, context, event):
+    def modal(self, context, event):
+                
+        if event.type == 'ESC':
+            
+            print("Cancelled render")
+            
+            endRender(self, context)
+            
+            return {'CANCELLED'}
         
-        return context.window_manager.invoke_props_dialog(self, width=340, height = 300)
+        elif event.type == 'TIMER' and not self.finished:
+            
+            render(self, context)
 
+        elif self.finished:
+            
+            print("Finished rendering")
+            
+            endRender(self, context)
+            
+            return {'FINISHED'}
+        
+        return {'RUNNING_MODAL'}
+     
 
     def draw(self, context):
         layout = self.layout
 
-        if bpy.context.scene.camera:               
-            row = layout.row()
-            row.label("Once the render has started it cannot be easily stopped unless", icon="INFO")
-            row = layout.row()
-            row.label("you close Blender. Make sure your work is saved if necessary.")  
-            row = layout.row()
-                
-            row.label("Press 'OK' to render or press the 'Esc' key on the keyboard")
-            row = layout.row()
-            row.label("to cancel.")  
-        else:
-            row = layout.row()
-            row.label("No active camera to render from", icon="ERROR")        
+        row = layout.row()
+        row.label("No active camera to render from, render cancelled.", icon="ERROR")        
 
 
     def execute(self, context):
         
         if bpy.context.scene.camera:
-            mainRender(context)
-        else:
-            pass
             
-        return {'FINISHED'}
+            self.finished = False
+            self.counter = bpy.context.scene.frame_start
+            self.timer = context.window_manager.event_timer_add(1, context.window)
+            self.oldStart = bpy.context.scene.frame_start
+            self.oldEnd = bpy.context.scene.frame_end
+            self.oldCurrent = bpy.context.scene.frame_current
+            
+            context.window_manager.progress_begin(0,context.scene.frame_end)
+            
+            context.window_manager.modal_handler_add(self)
+            
+            return {'RUNNING_MODAL'}
+        
+        else:
+            
+            #return context.window_manager.invoke_props_dialog(self, width=340, height = 300)
+            self.report({'INFO'}, "error")
+            
+            return {'CANCELLED'}
+            
+
+    #Gets run when pressing 'Ok' on error dialogue box
+#    def execute(self, context):
+#        
+#        return {'CANCELLED'}
     
         
 class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
