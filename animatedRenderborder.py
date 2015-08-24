@@ -362,6 +362,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         
         layout.active = scene.animated_render_border.enable
         
+        error = 0
+        
         if not context.scene.render.use_border and border.enable:
             row = layout.row()
             split = row.split(0.7)
@@ -372,6 +374,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             column = split.column()         
             column.operator("render.animated_render_border_fix", text="Fix")
+            
+            error+=1
         
         if scene.camera:    
             if scene.camera.type != "CAMERA":
@@ -379,6 +383,14 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.label(text="Active camera must be a Camera", icon="ERROR")
                 row = layout.row()
                 row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
+                
+                error+=1
+        
+        else:
+            row = layout.row()
+            row.label(text="No camera is set in scene properties", icon="ERROR")
+            
+            error+=1
         
         column = layout.column()
         row = column.row()
@@ -456,7 +468,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             noVertices = False
             
             if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:
-                
+
                 if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects without vertices
                     
                     noVertices = True
@@ -470,11 +482,20 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = column.row()
             row.enabled = enabled           
             row.prop(scene.animated_render_border, "draw_bounding_box", text="Draw Bounding Box")
-                
+  
             row = column.row()     
-            row.enabled = enabled      
-            row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")
+            row.enabled = enabled and error == 0
+            
+            if error > 0:
+                renderLabel = "Fix errors to render"
+            else:
+                renderLabel = "Render Animation"
+                     
+            row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")
         
+
+
+###########OPERATORS#########################################################
        
 
 class RENDER_OT_animated_render_border_render(bpy.types.Operator):
@@ -539,18 +560,10 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
             return {'RUNNING_MODAL'}
         
         else:
-            
-            #return context.window_manager.invoke_props_dialog(self, width=340, height = 300)
-            self.report({'INFO'}, "error")
-            
+                        
             return {'CANCELLED'}
             
-
-    #Gets run when pressing 'Ok' on error dialogue box
-#    def execute(self, context):
-#        
-#        return {'CANCELLED'}
-    
+                
         
 class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
     """Fix the render border by turning on 'Border' rendering"""
