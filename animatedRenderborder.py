@@ -536,16 +536,9 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
         
         return {'RUNNING_MODAL'}
      
-
-    def draw(self, context):
-        layout = self.layout
-
-        row = layout.row()
-        row.label("No active camera to render from, render cancelled.", icon="ERROR")        
-
-
+    
     def execute(self, context):
-        
+                
         if bpy.context.scene.camera:
             
             self.finished = False
