@@ -494,12 +494,15 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                      
             row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")
             
+        
+        resolutionX = (scene.render.resolution_x/100)*scene.render.resolution_percentage
+        resolutionY = (scene.render.resolution_y/100)*scene.render.resolution_percentage
             
-            xSize = round(1280*(bpy.context.scene.render.border_max_x - bpy.context.scene.render.border_min_x))
-            ySize = round(720*(bpy.context.scene.render.border_max_y - bpy.context.scene.render.border_min_y))
+        xSize = round(resolutionX*(scene.render.border_max_x - scene.render.border_min_x))
+        ySize = round(resolutionY*(scene.render.border_max_y - scene.render.border_min_y))
 
-            row = column.row()
-            row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
+        row = column.row()
+        row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
         
 
 
