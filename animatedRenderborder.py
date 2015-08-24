@@ -528,6 +528,8 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
             
             print("Finished rendering")
             
+            self.report({'INFO'}, "Border rendering finished")
+            
             endRender(self, context)
             
             return {'FINISHED'}
