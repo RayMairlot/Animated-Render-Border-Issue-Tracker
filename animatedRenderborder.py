@@ -494,15 +494,16 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                      
             row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")
             
-        
-        resolutionX = (scene.render.resolution_x/100)*scene.render.resolution_percentage
-        resolutionY = (scene.render.resolution_y/100)*scene.render.resolution_percentage
+        if bpy.context.user_preferences.addons['animatedRenderborder'].preferences.display_border_dimensions:
             
-        xSize = round(resolutionX*(scene.render.border_max_x - scene.render.border_min_x))
-        ySize = round(resolutionY*(scene.render.border_max_y - scene.render.border_min_y))
+            resolutionX = (scene.render.resolution_x/100)*scene.render.resolution_percentage
+            resolutionY = (scene.render.resolution_y/100)*scene.render.resolution_percentage
+                
+            xSize = round(resolutionX*(scene.render.border_max_x - scene.render.border_min_x))
+            ySize = round(resolutionY*(scene.render.border_max_y - scene.render.border_min_y))
 
-        row = column.row()
-        row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
+            row = column.row()
+            row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
         
 
 
@@ -606,7 +607,20 @@ class RENDER_OT_animated_render_border_delete_keyframe(bpy.types.Operator):
             
         return {'FINISHED'}       
             
+            
+###########USER PREFERENCES##################################################            
+            
+                   
+class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
+    bl_idname = __name__  
+    
+    display_border_dimensions = bpy.props.BoolProperty(name="Display border dimensions",default=False,description="Shows the dimensions of the current border, under the 'Render Animation' button")
 
+    def draw(self, context):
+        layout = self.layout
+        row = layout.row()
+        row.prop(self, "display_border_dimensions")
+               
 
 def register():
     
@@ -617,7 +631,8 @@ def register():
     bpy.utils.register_class(RENDER_OT_animated_render_border_render)
     bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
     bpy.utils.register_class(RENDER_OT_animated_render_border_insert_keyframe)   
-    bpy.utils.register_class(RENDER_OT_animated_render_border_delete_keyframe)        
+    bpy.utils.register_class(RENDER_OT_animated_render_border_delete_keyframe)  
+    bpy.utils.register_class(AnimatedRenderBorderPreferences)        
     
     
 def unregister():
@@ -631,6 +646,7 @@ def unregister():
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_insert_keyframe)    
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)        
     bpy.utils.unregister_class(animatedBorderRenderProperties)
+    bpy.utils.unregister_class(AnimatedRenderBorderPreferences)    
     
     del bpy.types.Scene.animated_render_border
     
