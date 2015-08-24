@@ -275,7 +275,7 @@ def animate_render_border(scene):
 
 def render(self, context):
     
-    if self.counter == self.oldEnd+1:
+    if self.counter > self.oldEnd:
         
         self.finished = True
         
@@ -293,7 +293,7 @@ def render(self, context):
         
         context.window_manager.progress_update(self.counter)
         
-        self.counter +=1
+        self.counter += context.scene.frame_step
         
         
 def endRender(self, context):
