@@ -305,7 +305,7 @@ def endRender(self, context):
     context.window_manager.event_timer_remove(self.timer)
     self.timer = None
     context.window_manager.progress_end()
-   
+       
     
 def mainFix(context):
                 
@@ -393,6 +393,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             error+=1
         
         column = layout.column()
+         
         row = column.row()
         row.prop(scene.animated_render_border, "type",expand=True)
         row = column.row()
@@ -492,6 +493,13 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 renderLabel = "Render Animation"
                      
             row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")
+            
+            
+            xSize = round(1280*(bpy.context.scene.render.border_max_x - bpy.context.scene.render.border_min_x))
+            ySize = round(720*(bpy.context.scene.render.border_max_y - bpy.context.scene.render.border_min_y))
+
+            row = column.row()
+            row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
         
 
 
