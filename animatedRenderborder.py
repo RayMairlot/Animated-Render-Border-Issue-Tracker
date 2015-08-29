@@ -58,12 +58,12 @@ def refreshTracking(self,context):
     updateBoundingBox(self,context)       
                    
 
-
+    
 def updateBoundingBox(self,context):
         
     border = context.scene.animated_render_border
         
-    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:  #If object is chosen as object but renamed, it can't be tracked.
+    if validObject():  
 
         if not border.enable and border.draw_bounding_box: #If tracking is being disabled bounds are turned off
            
@@ -73,7 +73,7 @@ def updateBoundingBox(self,context):
             
             bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
         
-    elif border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+    elif validGroup():
         
         for object in bpy.data.groups[border.group].objects:
             
@@ -202,8 +202,7 @@ def animate_render_border(scene):
     
     if border.enable and cameraExists:
         #If object is chosen but consequently renamed, it can't be tracked.
-        if border.type == "Object" and border.object != "" and border.object in bpy.data.objects or \
-           border.type == "Group" and border.group != "" and border.group in bpy.data.groups: 
+        if validObject() or validGroup(): 
         
             objs = [] 
             if border.type == "Object":  
@@ -286,7 +285,7 @@ def animate_render_border(scene):
           
            
 
-###########Operators############################################################
+###########Functions############################################################
 
 def render(self, context):
     
@@ -350,6 +349,23 @@ def deleteKeyframe(context):
     context.scene.keyframe_delete(data_path="animated_render_border.border_min_y")  
     context.scene.keyframe_delete(data_path="animated_render_border.border_max_y")   
     
+
+def validObject():
+    
+    border = bpy.context.scene.animated_render_border
+    
+    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects: #If object is chosen as object but renamed, it can't be tracked.
+        
+        return True    
+  
+    
+def validGroup():
+    
+    border = bpy.context.scene.animated_render_border
+    
+    if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+        
+        return True    
 
 
 ###########UI################################################################
@@ -443,7 +459,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row = column.row()
                 
                 objectIcon = "OBJECT_DATA"
-                if border.object != "" and border.object in bpy.data.objects:
+                if validObject():
                     objectIcon = bpy.data.objects[border.object].type+"_DATA"
                     
                     #Removed as speaker objects cannot be tracked
