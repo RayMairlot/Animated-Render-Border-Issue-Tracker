@@ -60,33 +60,60 @@ def refreshTracking(self,context):
 
     
 def updateBoundingBox(self,context):
-        
-    border = context.scene.animated_render_border
-        
+                
     if validObject():  
 
-        if not border.enable and border.draw_bounding_box: #If tracking is being disabled bounds are turned off
-           
-            bpy.data.objects[border.object].show_bounds = False     
-            
-        else:
-            
-            bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
+        updateObjectBoundingBox(False)
         
     elif validGroup():
         
-        for object in bpy.data.groups[border.group].objects:
-            
-            if object.type in trackableObjectTypes: #Types of object that can be tracked
-               
-                if not border.enable and border.draw_bounding_box: #If tracking is being disabled bounds are turned off
-                    
-                    object.show_bounds = False  
-                    
-                else:    
-                    
-                    object.show_bounds = border.draw_bounding_box
-                                            
+        updateGroupBoundingBox(False)
+        
+    else:
+        
+        updateGroupBoundingBox(True)
+        updateObjectBoundingBox(True)
+                                           
+
+
+def updateObjectBoundingBox(switchingTypes):
+    
+    border = bpy.context.scene.animated_render_border
+    
+    if not border.enable and border.draw_bounding_box or switchingTypes: #If tracking is being disabled bounds are turned off
+       
+        bpy.data.objects[border.object].show_bounds = False     
+        
+    else:
+        
+        bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
+
+    if border.group != "" and border.group in bpy.data.groups and not switchingTypes:
+        
+        updateGroupBoundingBox(True)        
+        
+    
+
+def updateGroupBoundingBox(switchingTypes):
+    
+    border = bpy.context.scene.animated_render_border
+    
+    for object in bpy.data.groups[border.group].objects:
+        
+        if object.type in trackableObjectTypes: #Types of object that can be tracked
+           
+            if not border.enable and border.draw_bounding_box or switchingTypes: #If tracking is being disabled bounds are turned off
+                
+                object.show_bounds = False  
+                
+            else:    
+                
+                object.show_bounds = border.draw_bounding_box
+                
+    if border.object != "" and border.object in bpy.data.objects and not switchingTypes:
+        
+        updateObjectBoundingBox(True)    
+
 
 
 def toggleTracking(self,context):
