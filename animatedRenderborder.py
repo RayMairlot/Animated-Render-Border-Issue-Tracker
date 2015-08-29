@@ -152,13 +152,13 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
     
-    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", min=0, max=1, update=updateBorderWithMinX)
+    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=1, update=updateBorderWithMinX)
     
-    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", min=0, max=1, update=updateBorderWithMaxX)
+    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", default=1, min=0, max=1, update=updateBorderWithMaxX)
 
-    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", min=0, max=1, update=updateBorderWithMinY)
+    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", default=0, min=0, max=1, update=updateBorderWithMinY)
 
-    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", min=0, max=1, update=updateBorderWithMaxY)    
+    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0, max=1, update=updateBorderWithMaxY)    
 
 
 bpy.utils.register_class(animatedBorderRenderProperties)
