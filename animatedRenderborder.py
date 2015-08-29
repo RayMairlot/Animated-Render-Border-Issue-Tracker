@@ -355,11 +355,11 @@ def validGroup():
         return True    
     
     
-def updateObjectBoundingBox(switchingTypes):
+def updateObjectBoundingBox(switchingToGroupTracking):
     
     border = bpy.context.scene.animated_render_border
     
-    if not border.enable and border.draw_bounding_box or switchingTypes: #If tracking is being disabled bounds are turned off
+    if not border.enable and border.draw_bounding_box or switchingToGroupTracking: #If tracking is being disabled bounds are turned off
        
         bpy.data.objects[border.object].show_bounds = False     
         
@@ -367,12 +367,12 @@ def updateObjectBoundingBox(switchingTypes):
         
         bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
 
-    if border.group != "" and border.group in bpy.data.groups and not switchingTypes:
+    if border.group != "" and border.group in bpy.data.groups and not switchingToGroupTracking:
         
         updateGroupBoundingBox(True)        
         
     
-def updateGroupBoundingBox(switchingTypes):
+def updateGroupBoundingBox(switchingToObjectTracking):
     
     border = bpy.context.scene.animated_render_border
     
@@ -380,7 +380,7 @@ def updateGroupBoundingBox(switchingTypes):
         
         if object.type in trackableObjectTypes: #Types of object that can be tracked
            
-            if not border.enable and border.draw_bounding_box or switchingTypes: #If tracking is being disabled bounds are turned off
+            if not border.enable and border.draw_bounding_box or switchingToObjectTracking: #If tracking is being disabled bounds are turned off
                 
                 object.show_bounds = False  
                 
@@ -388,7 +388,7 @@ def updateGroupBoundingBox(switchingTypes):
                 
                 object.show_bounds = border.draw_bounding_box
                 
-    if border.object != "" and border.object in bpy.data.objects and not switchingTypes:
+    if border.object != "" and border.object in bpy.data.objects and not switchingToObjectTracking:
         
         updateObjectBoundingBox(True)       
 
