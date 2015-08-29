@@ -51,8 +51,8 @@ def refreshTracking(self,context):
        
         if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects that don't have vertices
            
-            border.use_bounding_box = True         
-   
+            border.use_bounding_box = True      
+        
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
     updateBoundingBox(self,context)       
@@ -65,7 +65,13 @@ def updateBoundingBox(self,context):
         
     if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:  #If object is chosen as object but renamed, it can't be tracked.
 
-        bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
+        if not border.enable and border.draw_bounding_box: #If tracking is being disabled bounds are turned off
+           
+            bpy.data.objects[border.object].show_bounds = False     
+            
+        else:
+            
+            bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
         
     elif border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
         
@@ -73,7 +79,13 @@ def updateBoundingBox(self,context):
             
             if object.type in trackableObjectTypes: #Types of object that can be tracked
                
-                object.show_bounds = border.draw_bounding_box
+                if not border.enable and border.draw_bounding_box: #If tracking is being disabled bounds are turned off
+                    
+                    object.show_bounds = False  
+                    
+                else:    
+                    
+                    object.show_bounds = border.draw_bounding_box
                                             
 
 
@@ -84,7 +96,10 @@ def toggleTracking(self,context):
     if border.enable and not context.scene.render.use_border:
         context.scene.render.use_border = True
 
-    if border.enable:      
+    updateBoundingBox(self,context)
+                    
+    if border.enable:
+        
         updateObjectList(self)
         
     updateFrame(self,context)
@@ -481,8 +496,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row.prop(scene.animated_render_border, "use_bounding_box", text="Use Bounding Box")
             
             row = column.row()
-            row.enabled = enabled           
-            row.prop(scene.animated_render_border, "draw_bounding_box", text="Draw Bounding Box")
+            row.enabled = enabled                 
+            row.prop(scene.animated_render_border, "draw_bounding_box", text="Draw Bounding Box")                
   
             row = column.row()     
             row.enabled = enabled and error == 0
