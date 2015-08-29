@@ -503,7 +503,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             ySize = round(resolutionY*(scene.render.border_max_y - scene.render.border_min_y))
 
             row = column.row()
-            row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize))
+            row.label(text="Border dimensions: "+str(xSize)+" x "+str(ySize)+" pixels")
         
 
 
