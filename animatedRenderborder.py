@@ -65,20 +65,67 @@ def refreshTracking(self,context):
 
     
 def updateBoundingBox(self,context):
+    
+    border = context.scene.animated_render_border
                             
-    if validObject():  
+    if border.type == "Object":  
+        
+        toggleObjectBoundingBox(True)
+        toggleGroupBoundingBox(False)
+        
+    elif border.type == "Group":
+        
+        toggleObjectBoundingBox(False)
+        toggleGroupBoundingBox(True)
+        
+    elif border.type == "Keyframe":
+                    
+        toggleObjectBoundingBox(False)                       
+        toggleGroupBoundingBox(False)    
 
-        updateObjectBoundingBox(False)
+  
+  
+def toggleObjectBoundingBox(toggle):
+    
+    border = bpy.context.scene.animated_render_border
+    
+    if not border.enable:
         
-    elif validGroup():
+        toggle = False
         
-        updateGroupBoundingBox(False)
+    elif border.type == "Object": #When in object mode we are always hiding (taking value passed to function)
         
-    else:
-         
-        updateGroupBoundingBox(True)    
-        updateObjectBoundingBox(True)
-                                           
+        toggle = border.draw_bounding_box    
+        
+     
+    if border.object != "" and border.object in bpy.data.objects:
+        
+        bpy.data.objects[border.object].show_bounds = toggle
+
+
+    
+def toggleGroupBoundingBox(toggle):
+    
+    border = bpy.context.scene.animated_render_border
+    
+    if not border.enable:
+        
+        toggle = False
+        
+    elif border.type == "Group":
+        
+        toggle = border.draw_bounding_box   
+    
+    if border.group != "" and border.group in bpy.data.groups: #if group isn't blank AND it exits in group lists (in case of renames)
+    
+        for object in bpy.data.groups[border.group].objects:
+
+            if object.name != border.object: #object may be in a group AND be the selected tracking object
+            
+                if object.type in trackableObjectTypes:
+                
+                    object.show_bounds = toggle
+            
 
 
 def toggleTracking(self,context):
@@ -359,49 +406,7 @@ def validGroup():
         
         return True    
     
-    
-def updateObjectBoundingBox(switchingToGroupTracking):
-    
-    border = bpy.context.scene.animated_render_border
-    
-    if border.object != "" and border.object in bpy.data.objects:
-    
-        if not border.enable and border.draw_bounding_box or switchingToGroupTracking: #If tracking is being disabled bounds are turned off
-           
-            bpy.data.objects[border.object].show_bounds = False     
-            
-        else:
-            
-            bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
-
-    if border.group != "" and border.group in bpy.data.groups and not switchingToGroupTracking:
-        
-        updateGroupBoundingBox(True)        
-        
-    
-def updateGroupBoundingBox(switchingToObjectTracking):
-    
-    border = bpy.context.scene.animated_render_border
-    
-    if border.group != "" and border.group in bpy.data.groups:
-    
-        for object in bpy.data.groups[border.group].objects:
-            
-            if object.type in trackableObjectTypes: #Types of object that can be tracked
-               
-                if not border.enable and border.draw_bounding_box or switchingToObjectTracking: #If tracking is being disabled bounds are turned off
-                    
-                    object.show_bounds = False  
-                    
-                else:    
-                    
-                    object.show_bounds = border.draw_bounding_box
-                
-    if border.object != "" and border.object in bpy.data.objects and not switchingToObjectTracking:
-        
-        updateObjectBoundingBox(True)       
-
-
+      
 ###########UI################################################################
 
 
