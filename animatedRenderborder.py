@@ -47,7 +47,7 @@ def refreshTracking(self,context):
        
     border = context.scene.animated_render_border
    
-    if border.type == "Object":
+    if validObject():
        
         if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects that don't have vertices
            
@@ -60,7 +60,9 @@ def refreshTracking(self,context):
 
     
 def updateBoundingBox(self,context):
-                
+    
+    border = context.scene.animated_render_border
+                        
     if validObject():  
 
         updateObjectBoundingBox(False)
@@ -70,8 +72,8 @@ def updateBoundingBox(self,context):
         updateGroupBoundingBox(False)
         
     else:
-        
-        updateGroupBoundingBox(True)
+         
+        updateGroupBoundingBox(True)    
         updateObjectBoundingBox(True)
                                            
 
@@ -359,13 +361,15 @@ def updateObjectBoundingBox(switchingToGroupTracking):
     
     border = bpy.context.scene.animated_render_border
     
-    if not border.enable and border.draw_bounding_box or switchingToGroupTracking: #If tracking is being disabled bounds are turned off
-       
-        bpy.data.objects[border.object].show_bounds = False     
-        
-    else:
-        
-        bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
+    if border.object != "" and border.object in bpy.data.objects:
+    
+        if not border.enable and border.draw_bounding_box or switchingToGroupTracking: #If tracking is being disabled bounds are turned off
+           
+            bpy.data.objects[border.object].show_bounds = False     
+            
+        else:
+            
+            bpy.data.objects[border.object].show_bounds = border.draw_bounding_box
 
     if border.group != "" and border.group in bpy.data.groups and not switchingToGroupTracking:
         
@@ -376,17 +380,19 @@ def updateGroupBoundingBox(switchingToObjectTracking):
     
     border = bpy.context.scene.animated_render_border
     
-    for object in bpy.data.groups[border.group].objects:
-        
-        if object.type in trackableObjectTypes: #Types of object that can be tracked
-           
-            if not border.enable and border.draw_bounding_box or switchingToObjectTracking: #If tracking is being disabled bounds are turned off
-                
-                object.show_bounds = False  
-                
-            else:    
-                
-                object.show_bounds = border.draw_bounding_box
+    if border.group != "" and border.group in bpy.data.groups:
+    
+        for object in bpy.data.groups[border.group].objects:
+            
+            if object.type in trackableObjectTypes: #Types of object that can be tracked
+               
+                if not border.enable and border.draw_bounding_box or switchingToObjectTracking: #If tracking is being disabled bounds are turned off
+                    
+                    object.show_bounds = False  
+                    
+                else:    
+                    
+                    object.show_bounds = border.draw_bounding_box
                 
     if border.object != "" and border.object in bpy.data.objects and not switchingToObjectTracking:
         
