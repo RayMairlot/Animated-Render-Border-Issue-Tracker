@@ -547,6 +547,10 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             elif border.type == "Group" and border.group == "":
                 
                     noVertices = True
+                    
+            elif border.type == "Object" and border.object == "":
+                
+                    noVertices = True
                                             
             if noVertices:    
                 row.enabled = False
