@@ -65,9 +65,7 @@ def refreshTracking(self,context):
 
     
 def updateBoundingBox(self,context):
-    
-    border = context.scene.animated_render_border
-                        
+                            
     if validObject():  
 
         updateObjectBoundingBox(False)
@@ -535,13 +533,17 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             noVertices = False
             
-            if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:
+            if validObject():
 
                 if bpy.data.objects[border.object].type in noVertexObjectTypes or border.bone != "": #Objects without vertices or bones
                     
                     noVertices = True
+                    
+            elif border.type == "Group" and border.group == "":
+                
+                    noVertices = True
                                             
-            if noVertices or border.object == "":    
+            if noVertices:    
                 row.enabled = False
             else:
                 row.enabled = True   
