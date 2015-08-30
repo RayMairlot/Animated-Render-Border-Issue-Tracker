@@ -51,7 +51,12 @@ def refreshTracking(self,context):
        
         if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects that don't have vertices
            
-            border.use_bounding_box = True      
+            border.use_bounding_box = True  
+            
+        elif bpy.data.objects[border.object].type == "ARMATURE" and border.bone != "":
+            
+            border.use_bounding_box = False
+                
         
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
@@ -532,7 +537,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             if border.type == "Object" and border.object != "" and border.object in bpy.data.objects:
 
-                if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects without vertices
+                if bpy.data.objects[border.object].type in noVertexObjectTypes or border.bone != "": #Objects without vertices or bones
                     
                     noVertices = True
                                             
