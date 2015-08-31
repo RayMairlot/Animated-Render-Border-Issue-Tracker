@@ -311,34 +311,37 @@ def animate_render_border(scene):
                 wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
                     coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
-
-            minX = 1
-            maxX = 0
-            minY = 1
-            maxY = 0
             
-            for x, y, distance_to_lens in coords_2d:
-                                
-                #Points behind camera will have negative coordinates, this makes them positive                
-                if distance_to_lens<0:
-                    y = y *-1
-                    x = x *-1               
+            #If a group is empty there will be no coordinates
+            if len(coords_2d) > 0:
                 
-                if x<minX:
-                    minX = x
-                if x>maxX:
-                    maxX = x
-                if y<minY:
-                    minY = y
-                if y>maxY:
-                    maxY = y
-                                        
-            margin = border.margin/100
+                minX = 1
+                maxX = 0
+                minY = 1
+                maxY = 0
                 
-            scene.render.border_min_x = minX - margin
-            scene.render.border_max_x = maxX + margin
-            scene.render.border_min_y = minY - margin
-            scene.render.border_max_y = maxY + margin
+                for x, y, distance_to_lens in coords_2d:
+                                    
+                    #Points behind camera will have negative coordinates, this makes them positive                
+                    if distance_to_lens<0:
+                        y = y *-1
+                        x = x *-1               
+                    
+                    if x<minX:
+                        minX = x
+                    if x>maxX:
+                        maxX = x
+                    if y<minY:
+                        minY = y
+                    if y>maxY:
+                        maxY = y
+                                            
+                margin = border.margin/100
+                
+                scene.render.border_min_x = minX - margin
+                scene.render.border_max_x = maxX + margin
+                scene.render.border_min_y = minY - margin
+                scene.render.border_max_y = maxY + margin
             
         elif border.type == "Keyframe":
             
@@ -486,7 +489,42 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row.label(text="No camera is set in scene properties", icon="ERROR")
             
             error+=1
+            
+        if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
+            row = layout.row()
+            row.label(text="The object selected to be tracked", icon="ERROR")
+            row = layout.row()
+            row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
+             
+            error+=1
+         
+        elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
+            row = layout.row()
+            row.label(text="The group selected to be tracked", icon="ERROR") 
+            row = layout.row()
+            row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
+             
+            error+=1
         
+        #Checks for empty groups or groups with no trackable objects
+        trackableObjects = 0
+        if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+            
+            for object in bpy.data.groups[border.group].objects:
+                
+                if object.type in trackableObjectTypes:
+                    
+                    trackableObjects+=1
+                    
+            if trackableObjects < 1:
+                
+                row = layout.row()
+                row.label(text="The selected group has no trackable", icon="ERROR") 
+                row = layout.row()
+                row.label(text="objects.", icon="SCULPT_DYNTOPO")
+                
+                error+=1
+                     
         column = layout.column()
          
         row = column.row()
