@@ -59,23 +59,23 @@ def refreshTracking(self,context):
                 
     if border.type == "Object" and border.object !="":
         
-        border.old_mesh_objects.clear()
-        objectAdd = border.old_mesh_objects.add()
+        border.old_trackable_objects.clear()
+        objectAdd = border.old_trackable_objects.add()
         objectAdd.name = border.object
         
     elif border.type == "Group" and border.group !="":
         
-        border.old_mesh_objects.clear()
+        border.old_trackable_objects.clear()
         for object in bpy.data.groups[border.group].objects:
             if object.type in trackableObjectTypes:
-                objectAdd = border.old_mesh_objects.add()
+                objectAdd = border.old_trackable_objects.add()
                 objectAdd.name = object.name
     
     #Removes bounding box when object or group is no longer being tracked. 
     #Caused by clearing the 'object' or 'group' field.        
     if border.type == "Group" and border.group == "" or border.type == "Object" and border.object == "":
         
-        for object in border.old_mesh_objects:
+        for object in border.old_trackable_objects:
             
             if object.name in bpy.data.objects: #If object is renamed it wont exist in object list
                     
@@ -195,12 +195,12 @@ def updateObjectList(scene):
     border = bpy.context.scene.animated_render_border     
     
     if border.enable:        
-        border.mesh_objects.clear()
+        border.trackable_objects.clear()
         
         for object in bpy.context.scene.objects:
             if object.type in trackableObjectTypes: #Types of object that can be tracked
-                meshAdd = border.mesh_objects.add()
-                meshAdd.name = object.name                                          
+                objectAdd = border.trackable_objects.add()
+                objectAdd.name = object.name                                          
 
 
 #########Properties###########################################################
@@ -208,9 +208,9 @@ def updateObjectList(scene):
 
 class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     
-    old_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    old_trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
     object = bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
     
@@ -531,7 +531,6 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         row.prop(scene.animated_render_border, "type",expand=True)
         row = column.row()
         
-        
         if border.type == "Keyframe":
         
             column = layout.column()
@@ -568,7 +567,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     #if bpy.data.objects[border.object].type == "SPEAKER":   
                     #    objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
                     
-                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "mesh_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
+                row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "trackable_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
                 
             else:
                 row.label(text="Group to track:")
