@@ -270,45 +270,45 @@ def animate_render_border(scene):
         
             objs = [] 
             if border.type == "Object":  
-                objs = [border.object]
+                objs = [bpy.data.objects[border.object]]
             elif border.type == "Group":
-                objs = (object.name for object in bpy.data.groups[border.group].objects if object.type in trackableObjectTypes) #Type of objects that can be tracked
+                objs = (object for object in bpy.data.groups[border.group].objects if object.type in trackableObjectTypes) #Type of objects that can be tracked
             
             coords_2d = []
             for obj in objs:
                 
                 verts = []
-                if border.use_bounding_box or bpy.data.objects[obj].type in noVertexObjectTypes: #Objects that have no vertices
+                if border.use_bounding_box or obj.type in noVertexObjectTypes: #Objects that have no vertices
                 
-                    verts = (Vector(corner) for corner in bpy.data.objects[obj].bound_box)
+                    verts = (Vector(corner) for corner in obj.bound_box)
                 
-                elif bpy.data.objects[obj].type == "MESH":
+                elif obj.type == "MESH":
                 
-                    verts = (vert.co for vert in bpy.data.objects[obj].data.vertices)
+                    verts = (vert.co for vert in obj.data.vertices)
                 
-                elif bpy.data.objects[obj].type == "CURVE":
+                elif obj.type == "CURVE":
                     
-                    verts = (vert.co for spline in bpy.data.objects[obj].data.splines for vert in spline.bezier_points)
+                    verts = (vert.co for spline in obj.data.splines for vert in spline.bezier_points)
                 
-                elif bpy.data.objects[obj].type == "SURFACE":
+                elif obj.type == "SURFACE":
                     
-                    verts = (vert.co for spline in bpy.data.objects[obj].data.splines for vert in spline.points)
+                    verts = (vert.co for spline in obj.data.splines for vert in spline.points)
                     
-                elif bpy.data.objects[obj].type == "LATTICE":
+                elif obj.type == "LATTICE":
                 
-                    verts = (vert.co_deform for vert in bpy.data.objects[obj].data.points)
+                    verts = (vert.co_deform for vert in obj.data.points)
                     
-                elif bpy.data.objects[obj].type == "ARMATURE":
+                elif obj.type == "ARMATURE":
 
                     if border.bone == "":
                         
-                        verts = (chain.from_iterable((bone.head, bone.tail) for bone in bpy.data.objects[obj].pose.bones))
+                        verts = (chain.from_iterable((bone.head, bone.tail) for bone in obj.pose.bones))
                         
                     else:
                         bone = bpy.data.objects[border.object].pose.bones[border.bone]
                         verts = [bone.head, bone.tail]
                         
-                wm = bpy.data.objects[obj].matrix_world     #Vertices will be in local space unless multiplied by the world matrix
+                wm = obj.matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
                     coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
             
