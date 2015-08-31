@@ -57,7 +57,30 @@ def refreshTracking(self,context):
             
             border.use_bounding_box = False
                 
+    if border.type == "Object" and border.object !="":
         
+        border.old_mesh_objects.clear()
+        objectAdd = border.old_mesh_objects.add()
+        objectAdd.name = border.object
+        
+    elif border.type == "Group" and border.group !="":
+        
+        border.old_mesh_objects.clear()
+        for object in bpy.data.groups[border.group].objects:
+            if object.type in trackableObjectTypes:
+                objectAdd = border.old_mesh_objects.add()
+                objectAdd.name = object.name
+    
+    #Removes bounding box when object or group is no longer being tracked. 
+    #Caused by clearing the 'object' or 'group' field.        
+    if border.type == "Group" and border.group == "" or border.type == "Object" and border.object == "":
+        
+        for object in border.old_mesh_objects:
+            
+            if object.name in bpy.data.objects: #If object is renamed it wont exist in object list
+                    
+                bpy.data.objects[object.name].show_bounds = False
+                       
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
     updateBoundingBox(self,context)       
@@ -97,7 +120,6 @@ def toggleObjectBoundingBox(toggle):
         
         toggle = border.draw_bounding_box    
         
-     
     if border.object != "" and border.object in bpy.data.objects:
         
         bpy.data.objects[border.object].show_bounds = toggle
@@ -174,6 +196,7 @@ def updateObjectList(scene):
     
     if border.enable:        
         border.mesh_objects.clear()
+        
         for object in bpy.context.scene.objects:
             if object.type in trackableObjectTypes: #Types of object that can be tracked
                 meshAdd = border.mesh_objects.add()
@@ -184,6 +207,8 @@ def updateObjectList(scene):
 
 
 class animatedBorderRenderProperties(bpy.types.PropertyGroup):
+    
+    old_mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
     mesh_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
@@ -525,8 +550,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin.enabled = enabled    
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
             
-            if border.object != "":
-                if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object" :
+            if validObject():
+                if bpy.data.objects[border.object].type == "ARMATURE":
         
                    row = column.row()
                    row.label(text="Bone to track (optional):")
