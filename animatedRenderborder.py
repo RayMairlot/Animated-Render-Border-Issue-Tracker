@@ -248,11 +248,13 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 
 #########Frame Handler########################################################
 
-bpy.app.handlers.frame_change_post.clear()
-bpy.app.handlers.scene_update_post.clear()
+#Only needed when manually running from text editor
+#bpy.app.handlers.frame_change_post.clear()
+#bpy.app.handlers.scene_update_post.clear()
+
 
 @persistent
-def animate_render_border(scene):
+def animated_render_border(scene):
         
     scene = bpy.context.scene
     camera = scene.camera
@@ -365,7 +367,7 @@ def render(self, context):
         print("Rendering frame "+str(self.counter))
                 
         context.scene.frame_set(self.counter)
-        animate_render_border(context.scene)
+        animated_render_border(context.scene)
         
         context.scene.frame_start = self.counter
         context.scene.frame_end = self.counter
@@ -551,7 +553,12 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = column.row()
             row.label(text="")
             row.prop(scene.animated_render_border, "border_min_y", text="Min Y")        
-            row.label(text="")                           
+            row.label(text="")
+            
+            row = column.row()
+            row.label(text="")
+            row = column.row()            
+            row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")                           
             
         else:
             
@@ -764,7 +771,7 @@ class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
 
 def register():
     
-    bpy.app.handlers.frame_change_post.append(animate_render_border)
+    bpy.app.handlers.frame_change_post.append(animated_render_border)
     bpy.app.handlers.scene_update_post.append(updateObjectList)
     
     bpy.utils.register_class(RENDER_PT_animated_render_border)
@@ -777,7 +784,7 @@ def register():
     
 def unregister():
     
-    bpy.app.handlers.frame_change_post.remove(animate_render_border)        
+    bpy.app.handlers.frame_change_post.remove(animated_render_border)        
     bpy.app.handlers.scene_update_post.remove(updateObjectList)
     
     bpy.utils.unregister_class(RENDER_PT_animated_render_border)
