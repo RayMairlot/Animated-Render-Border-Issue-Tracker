@@ -508,6 +508,14 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
              
             error+=1
         
+        if border.border_min_x > border.border_max_x or border.border_min_y > border.border_max_y:    
+            row = layout.row()
+            row.label(text="Minimum border values cannot", icon="ERROR") 
+            row = layout.row()
+            row.label(text="be bigger than maximum border values.", icon="SCULPT_DYNTOPO")
+             
+            error+=1
+        
         #Checks for empty groups or groups with no trackable objects
         trackableObjects = 0
         if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
