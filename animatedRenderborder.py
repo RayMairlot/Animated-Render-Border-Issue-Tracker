@@ -622,14 +622,9 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             row = column.row()
             row.label(text="")
-            row = column.row() 
-            row.enabled = error == 0           
-            if error > 0:
-                renderLabel = "Fix errors to render"
-            else:
-                renderLabel = "Render Animation"
+            row = column.row()          
                      
-            row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")                        
+            row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")                        
             
         else:
             
