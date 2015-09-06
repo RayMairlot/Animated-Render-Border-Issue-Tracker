@@ -177,6 +177,7 @@ def updateBorderWithMinX(self,context):
         border.border_max_x = border.border_min_x + 0.01
         
      
+     
 def updateBorderWithMaxX(self,context):
 
     border = bpy.context.scene.animated_render_border     
@@ -186,6 +187,8 @@ def updateBorderWithMaxX(self,context):
         
         border.border_min_x = border.border_max_x - 0.01
     
+    
+    
 def updateBorderWithMinY(self,context):
 
     border = bpy.context.scene.animated_render_border     
@@ -194,6 +197,8 @@ def updateBorderWithMinY(self,context):
     if border.border_min_y > border.border_max_y:
         
         border.border_max_y = border.border_min_y + 0.01
+    
+    
     
 def updateBorderWithMaxY(self,context):
 
@@ -205,21 +210,6 @@ def updateBorderWithMaxY(self,context):
         border.border_min_y = border.border_max_y - 0.01          
 
           
-          
-@persistent          
-def updateObjectList(scene):
-            
-    border = bpy.context.scene.animated_render_border     
-    
-    if border.enable:        
-        border.trackable_objects.clear()
-        
-        for object in bpy.context.scene.objects:
-            if object.type in trackableObjectTypes: #Types of object that can be tracked
-                objectAdd = border.trackable_objects.add()
-                objectAdd.name = object.name                                          
-
-
 #########Properties###########################################################
 
 
@@ -369,7 +359,22 @@ def animated_render_border(scene):
             scene.render.border_min_y = border.border_min_y
             scene.render.border_max_y = border.border_max_y
           
-           
+
+
+@persistent          
+def updateObjectList(scene):
+            
+    border = bpy.context.scene.animated_render_border     
+    
+    if border.enable:        
+        border.trackable_objects.clear()
+        
+        for object in bpy.context.scene.objects:
+            if object.type in trackableObjectTypes: #Types of object that can be tracked
+                objectAdd = border.trackable_objects.add()
+                objectAdd.name = object.name    
+                           
+
 
 ###########Functions############################################################
 
