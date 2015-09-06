@@ -504,6 +504,16 @@ def checkForErrors():
         errors = "\n The following error(s) have to be addressed before rendering:"+errors
         raise Exception(errors)         
     
+  
+def refreshUIValues(context):
+    
+    border = bpy.context.scene.animated_render_border
+    
+    border.border_min_x = context.scene.render.border_min_x
+    border.border_max_x = context.scene.render.border_max_x
+    border.border_min_y = context.scene.render.border_min_y
+    border.border_max_y = context.scene.render.border_max_y
+      
       
 ###########UI################################################################
 
@@ -610,7 +620,15 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             col = column.column(align=True)
             col.operator("render.animated_render_border_insert_keyframe", text="Insert Keyframe", icon="KEY_HLT")
             col.operator("render.animated_render_border_delete_keyframe", text="Delete Keyframe", icon="KEY_DEHLT")    
-            col.label(text="Border Vales:")          
+            col.label(text="Border Vales:")
+            
+            if scene.render.border_min_x != border.border_min_x or \
+               scene.render.border_max_x != border.border_max_x or \
+               scene.render.border_min_y != border.border_min_y or \
+               scene.render.border_min_y != border.border_min_y:
+                row = column.row()
+                row.operator("render.animated_render_border_refresh_values", text="Refresh to synchonise border values", icon="FILE_REFRESH")  
+                      
             row = column.row()
             row.label(text="")
             row.prop(scene.animated_render_border, "border_max_y", text="Max Y")  
@@ -825,7 +843,19 @@ class RENDER_OT_animated_render_border_delete_keyframe(bpy.types.Operator):
      
         deleteKeyframe(context)
             
-        return {'FINISHED'}       
+        return {'FINISHED'}  
+    
+    
+class RENDER_OT_animated_render_border_refresh_values(bpy.types.Operator):
+    """Refresh the UI values in case the border was manually redrawn in the viewport"""
+    bl_idname = "render.animated_render_border_refresh_values"
+    bl_label = "Delete Animated Render Border Keyframe"
+
+    def execute(self, context):
+     
+        refreshUIValues(context)
+            
+        return {'FINISHED'}           
             
             
 ###########USER PREFERENCES##################################################            
@@ -852,6 +882,7 @@ def register():
     bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
     bpy.utils.register_class(RENDER_OT_animated_render_border_insert_keyframe)   
     bpy.utils.register_class(RENDER_OT_animated_render_border_delete_keyframe)  
+    bpy.utils.register_class(RENDER_OT_animated_render_border_refresh_values)  
     bpy.utils.register_class(AnimatedRenderBorderPreferences)        
     
     
@@ -864,7 +895,8 @@ def unregister():
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_render)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_fix)
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_insert_keyframe)    
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)        
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)  
+    bpy.utils.unregister_class(RENDER_OT_animated_render_border_refresh_values)        
     bpy.utils.unregister_class(animatedBorderRenderProperties)
     bpy.utils.unregister_class(AnimatedRenderBorderPreferences)    
     
