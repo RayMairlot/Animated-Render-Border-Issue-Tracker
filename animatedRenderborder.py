@@ -451,7 +451,54 @@ def validGroup():
     
     if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
         
-        return True    
+        return True   
+    
+    
+def checkForErrors():
+    
+    border = bpy.context.scene.animated_render_border
+    scene = bpy.context.scene
+    
+    errors = ""
+         
+    if not scene.render.use_border and border.enable:
+
+        errors += "\n 'Border' is disabled in 'Dimensions' panel."
+
+    if scene.camera:    
+        if scene.camera.type != "CAMERA":
+
+            errors += "\n Active camera must be a Camera object, not "+scene.camera.type.lower().capitalize()+"'."
+
+    else:
+
+        errors += "\n No camera is set in scene properties."
+       
+    if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
+
+        errors += "\n The object selected to be tracked does not exist."
+     
+    elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
+
+        errors += "\n The group selected to be tracked does not exist."
+     
+    #Checks for empty groups or groups with no trackable objects
+    trackableObjects = 0
+    if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+
+        for object in bpy.data.groups[border.group].objects:
+
+            if object.type in trackableObjectTypes:
+
+                trackableObjects+=1
+
+        if trackableObjects < 1:
+
+            errors += "\n The selected group has no trackable objects."
+ 
+    if errors != "":
+        errors = "\n The following error(s) have to be addressed before rendering:"+errors
+        raise Exception(errors)         
     
       
 ###########UI################################################################
@@ -576,8 +623,13 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = column.row()
             row.label(text="")
             row = column.row() 
+            row.enabled = error == 0           
+            if error > 0:
+                renderLabel = "Fix errors to render"
+            else:
+                renderLabel = "Render Animation"
                      
-            row.operator("render.animated_render_border_render", text="Render Animation", icon="RENDER_ANIMATION")                        
+            row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")                        
             
         else:
             
@@ -716,7 +768,10 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
      
     
     def execute(self, context):
-                
+        
+        #Raises Exception if error(s) are found                         
+        checkForErrors() 
+                             
         if bpy.context.scene.camera:
             
             self.finished = False
@@ -736,8 +791,8 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
                         
             return {'CANCELLED'}
             
-                
-        
+ 
+         
 class RENDER_OT_animated_render_border_fix(bpy.types.Operator):
     """Fix the render border by turning on 'Border' rendering"""
     bl_idname = "render.animated_render_border_fix"
