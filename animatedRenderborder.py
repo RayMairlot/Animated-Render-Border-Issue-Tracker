@@ -434,10 +434,12 @@ def insertKeyframe(context):
     
 def deleteKeyframe(context):
 
-    context.scene.keyframe_delete(data_path="animated_render_border.border_min_x")  
-    context.scene.keyframe_delete(data_path="animated_render_border.border_max_x")  
-    context.scene.keyframe_delete(data_path="animated_render_border.border_min_y")  
-    context.scene.keyframe_delete(data_path="animated_render_border.border_max_y")   
+    if context.scene.animation_data.action:
+        
+        context.scene.keyframe_delete(data_path="animated_render_border.border_min_x")  
+        context.scene.keyframe_delete(data_path="animated_render_border.border_max_x")  
+        context.scene.keyframe_delete(data_path="animated_render_border.border_min_y")  
+        context.scene.keyframe_delete(data_path="animated_render_border.border_max_y")   
     
 
 def validObject():
