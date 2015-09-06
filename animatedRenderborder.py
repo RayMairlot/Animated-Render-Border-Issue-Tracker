@@ -175,6 +175,7 @@ def updateBorderWithMinX(self,context):
     if border.border_min_x > border.border_max_x:
         
         border.border_max_x = border.border_min_x + 0.01
+        
      
 def updateBorderWithMaxX(self,context):
 
@@ -247,13 +248,13 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
     
-    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=1, update=updateBorderWithMinX)
+    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinX)
     
-    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", default=1, min=0, max=1, update=updateBorderWithMaxX)
+    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxX)
 
-    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", default=0, min=0, max=1, update=updateBorderWithMinY)
+    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinY)
 
-    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0, max=1, update=updateBorderWithMaxY)    
+    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxY)    
 
 
 bpy.utils.register_class(animatedBorderRenderProperties)
@@ -523,7 +524,8 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
              
             error+=1
-                
+        
+         
         #Checks for empty groups or groups with no trackable objects
         trackableObjects = 0
         if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
