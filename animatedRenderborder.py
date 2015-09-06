@@ -422,7 +422,6 @@ def insertKeyframe(context):
     border = context.scene.animated_render_border
     
     border.border_min_x = context.scene.render.border_min_x
-    border.border_min_y = context.scene.render.border_min_y
     border.border_max_x = context.scene.render.border_max_x
     border.border_min_y = context.scene.render.border_min_y
     border.border_max_y = context.scene.render.border_max_y            
