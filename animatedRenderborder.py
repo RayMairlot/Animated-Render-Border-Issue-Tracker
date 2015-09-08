@@ -207,7 +207,7 @@ def updateBorderWithMaxY(self,context):
     
     if round(border.border_min_y,2) >= round(border.border_max_y,2):
         
-        border.border_min_y = border.border_max_y - 0.01          
+        border.border_min_y = round(border.border_max_y,2) - 0.01          
 
           
 #########Properties###########################################################
