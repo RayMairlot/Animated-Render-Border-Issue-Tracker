@@ -213,7 +213,7 @@ def updateBorderWithMaxY(self,context):
 #########Properties###########################################################
 
 
-class animatedBorderRenderProperties(bpy.types.PropertyGroup):
+class animatedRenderBorderProperties(bpy.types.PropertyGroup):
     
     old_trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
@@ -225,7 +225,7 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     group = bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
 
-    type = bpy.props.EnumProperty(description = "The type of tracking to do, objects or groups", items=[
+    type = bpy.props.EnumProperty(description = "The type of tracking to do, Object or Group or Keyframe", items=[
                                                                                                         ("Object","Object","Object"),
                                                                                                         ("Group","Group","Group"),
                                                                                                         ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
@@ -236,7 +236,7 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
 
     draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
-    enable = bpy.props.BoolProperty(default=False, description="Animated Render Border", update=toggleTracking)
+    enable = bpy.props.BoolProperty(default=False, description="Enable Animated Render Border", update=toggleTracking)
     
     border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinX)
     
@@ -247,10 +247,10 @@ class animatedBorderRenderProperties(bpy.types.PropertyGroup):
     border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxY)    
 
 
-bpy.utils.register_class(animatedBorderRenderProperties)
+bpy.utils.register_class(animatedRenderBorderProperties)
 
 
-bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedBorderRenderProperties)
+bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedRenderBorderProperties)
 
 
 #########Frame Handler########################################################
