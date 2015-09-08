@@ -172,10 +172,10 @@ def updateBorderWithMinX(self,context):
     border = bpy.context.scene.animated_render_border     
     context.scene.render.border_min_x = border.border_min_x
     
-    if border.border_min_x > border.border_max_x:
+    if round(border.border_min_x,2) >= round(border.border_max_x,2):
         
-        border.border_max_x = border.border_min_x + 0.01
-        
+        border.border_max_x = round(border.border_min_x,2) + 0.01
+            
      
      
 def updateBorderWithMaxX(self,context):
@@ -183,10 +183,10 @@ def updateBorderWithMaxX(self,context):
     border = bpy.context.scene.animated_render_border     
     context.scene.render.border_max_x = border.border_max_x
     
-    if border.border_min_x > border.border_max_x:
+    if round(border.border_min_x,2) >= round(border.border_max_x,2):
         
-        border.border_min_x = border.border_max_x - 0.01
-    
+        border.border_min_x = round(border.border_max_x,2) - 0.01
+                        
     
     
 def updateBorderWithMinY(self,context):
@@ -194,9 +194,9 @@ def updateBorderWithMinY(self,context):
     border = bpy.context.scene.animated_render_border     
     context.scene.render.border_min_y = border.border_min_y
     
-    if border.border_min_y > border.border_max_y:
+    if round(border.border_min_y,2) >= round(border.border_max_y,2):
         
-        border.border_max_y = border.border_min_y + 0.01
+        border.border_max_y = round(border.border_min_y,2) + 0.01
     
     
     
@@ -205,7 +205,7 @@ def updateBorderWithMaxY(self,context):
     border = bpy.context.scene.animated_render_border     
     context.scene.render.border_max_y = border.border_max_y  
     
-    if border.border_min_y > border.border_max_y:
+    if round(border.border_min_y,2) >= round(border.border_max_y,2):
         
         border.border_min_y = border.border_max_y - 0.01          
 
