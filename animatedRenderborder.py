@@ -664,6 +664,14 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.label(text="Object to track:")
                 row = column.row()
                 
+                #Armatures and Lattices can only be tracked in blender 2.76 and later.
+                if validObject() and bpy.app.version[0] == 2 and bpy.app.version[1] < 76 and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
+                    row = column.row()
+                    row.label(text=bpy.data.objects[border.object].type.lower().capitalize()+" objects can only use bounding", icon="ERROR")
+                    row = column.row()
+                    row.label(text="box tracking in Blender 2.76 and later.", icon="SCULPT_DYNTOPO")
+                    row = column.row()   
+                
                 objectIcon = "OBJECT_DATA"
                 if validObject():
                     objectIcon = bpy.data.objects[border.object].type+"_DATA"
@@ -671,11 +679,31 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     #Removed as speaker objects cannot be tracked
                     #if bpy.data.objects[border.object].type == "SPEAKER":   
                     #    objectIcon = "SPEAKER" #Speaker doesn't have it's own icon like other objects
-                    
+                     
                 row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "trackable_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
                 
             else:
                 row.label(text="Group to track:")
+                
+                #Armatures and Lattices can only be tracked in blender 2.76 and later.
+                warningNeeded = False
+                if validGroup() and bpy.app.version[0] == 2 and bpy.app.version[1] < 76:
+                
+                    for object in bpy.data.groups[border.group].objects:
+                        
+                        if bpy.data.objects[object.name].type in ["ARMATURE","LATTICE"]:
+                            
+                            warningNeeded = True
+                
+                if warningNeeded:            
+                    row = column.row()
+                    row.label(text="Armature or Lattice objects in this group", icon="ERROR")
+                    row = column.row()
+                    row.label(text="can only use bounding box tracking in", icon="SCULPT_DYNTOPO")
+                    row = column.row()
+                    row.label(text="Blender 2.76 and later.", icon="SCULPT_DYNTOPO")
+                    row = column.row()  
+                
                 row = column.row()
                 row.prop_search(scene.animated_render_border, "group", bpy.data, "groups", text="")
             
