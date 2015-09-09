@@ -145,12 +145,21 @@ def toggleGroupBoundingBox(toggle):
     if border.group != "" and border.group in bpy.data.groups: #if group isn't blank AND it exits in group lists (in case of renames)
     
         for object in bpy.data.groups[border.group].objects:
-
-            if object.name != border.object: #object may be in a group AND be the selected tracking object
             
-                if object.type in trackableObjectTypes:
+            #When in group mode all objects should be toggled, otherwise all objects apart from the one being tracked in object mode should be.
+            if border.type == "Group":
                 
+                if object.type in trackableObjectTypes:
+                    
                     object.show_bounds = toggle
+            
+            else:
+                
+                if object.name != border.object: #object may be in a group AND be the selected tracking object
+                
+                    if object.type in trackableObjectTypes:
+                            
+                        object.show_bounds = toggle
             
 
 
