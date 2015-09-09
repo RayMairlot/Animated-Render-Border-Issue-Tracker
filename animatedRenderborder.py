@@ -421,11 +421,19 @@ def insertKeyframe(context):
     
     border = context.scene.animated_render_border
     
+    if round(bpy.context.scene.render.border_min_x,2) == round(bpy.context.scene.render.border_max_x,2):
+        
+        bpy.context.scene.render.border_max_x += 0.01 
+        
+    if round(bpy.context.scene.render.border_min_y,2) == round(bpy.context.scene.render.border_max_y,2):
+        
+        bpy.context.scene.render.border_max_y += 0.01         
+    
     border.border_min_x = context.scene.render.border_min_x
     border.border_max_x = context.scene.render.border_max_x
     border.border_min_y = context.scene.render.border_min_y
     border.border_max_y = context.scene.render.border_max_y            
-    
+        
     context.scene.keyframe_insert(data_path="animated_render_border.border_min_x")  
     context.scene.keyframe_insert(data_path="animated_render_border.border_max_x")  
     context.scene.keyframe_insert(data_path="animated_render_border.border_min_y")  
