@@ -380,10 +380,27 @@ def animated_render_border(scene):
                                             
                 margin = border.margin/100
                 
-                scene.render.border_min_x = minX - margin
-                scene.render.border_max_x = maxX + margin
-                scene.render.border_min_y = minY - margin
-                scene.render.border_max_y = maxY + margin
+                #2* (x resolution/yresolution) = 2*1.77 = 3.54
+                #Haven't worked out why I'm multiplying 'shift_x' and 'shift_y' by 2
+                if scene.render.resolution_x > scene.render.resolution_y:
+                        
+                    aspectRatio = 2 * (scene.render.resolution_x / scene.render.resolution_y)
+                    
+                    cameraShiftX = scene.camera.data.shift_x * 2
+                    cameraShiftY = scene.camera.data.shift_y * aspectRatio
+                    
+                else:
+                    
+                    aspectRatio = 2 * (scene.render.resolution_y / scene.render.resolution_x)
+                    
+                    cameraShiftX = scene.camera.data.shift_x*aspectRatio
+                    cameraShiftY = scene.camera.data.shift_y*2
+                    
+                
+                scene.render.border_min_x = (minX - margin) - cameraShiftX
+                scene.render.border_max_x = (maxX + margin) - cameraShiftX
+                scene.render.border_min_y = (minY - margin) - cameraShiftY
+                scene.render.border_max_y = (maxY + margin) - cameraShiftY
             
         elif border.type == "Keyframe":
             
