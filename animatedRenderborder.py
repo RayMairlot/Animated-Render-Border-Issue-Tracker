@@ -57,7 +57,7 @@ def refreshTracking(self,context):
             
             border.use_bounding_box = False
             
-        elif bpy.app.version[0] == 2 and bpy.app.version[1] < 76 and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
+        elif bpy.app.version < (2, 76, 0) and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
             
             border.use_bounding_box = False
                 
@@ -303,7 +303,7 @@ def animated_render_border(scene):
                 if border.use_bounding_box or obj.type in noVertexObjectTypes: #Objects that have no vertices
                     
                     #Lattices and Armatures can't use bounding box in pre 2.76 version of blender.
-                    if bpy.app.version[0] == 2 and bpy.app.version[1] < 76 and obj.type in ["ARMATURE","LATTICE"]:
+                    if bpy.app.version < (2, 76, 0) and obj.type in ["ARMATURE","LATTICE"]:
                     
                         if obj.type == "LATTICE":
                             
@@ -715,7 +715,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row = column.row()
                 
                 #Armatures and Lattices can only be tracked in blender 2.76 and later.
-                if validObject() and bpy.app.version[0] == 2 and bpy.app.version[1] < 76 and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
+                if validObject() and bpy.app.version < (2, 76, 0) and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
                     row = column.row()
                     row.label(text=bpy.data.objects[border.object].type.lower().capitalize()+" objects can only use bounding", icon="ERROR")
                     row = column.row()
@@ -737,7 +737,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 
                 #Armatures and Lattices can only be tracked in blender 2.76 and later.
                 warningNeeded = False
-                if validGroup() and bpy.app.version[0] == 2 and bpy.app.version[1] < 76 and border.use_bounding_box:
+                if validGroup() and bpy.app.version < (2, 76, 0) and border.use_bounding_box:
                 
                     for object in bpy.data.groups[border.group].objects:
                         
@@ -799,7 +799,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                         
                     noVertices = True
                     
-                if bpy.app.version[0] == 2 and bpy.app.version[1] < 76:
+                if bpy.app.version < (2, 76, 0):
                     
                     noVertices = True     
                                             
