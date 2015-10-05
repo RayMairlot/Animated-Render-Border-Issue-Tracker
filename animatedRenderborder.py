@@ -46,7 +46,15 @@ def updateFrame(self,context):
 def refreshTracking(self,context):
        
     border = context.scene.animated_render_border
-   
+    
+    #Removes bounding box when object or group is no longer being tracked.       
+    for object in border.old_trackable_objects:
+
+        #If object is renamed or deleted it wont exist in object list
+        if object.name in bpy.data.objects:
+                
+            bpy.data.objects[object.name].show_bounds = False
+        
     if validObject():
        
         if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects that don't have vertices
@@ -60,7 +68,9 @@ def refreshTracking(self,context):
         elif bpy.app.version < (2, 76, 0) and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
             
             border.use_bounding_box = False
-                
+    
+    #Create a a list of currently tracked objects so bounding boxes can be cleared
+    #when switching to a new object            
     if border.type == "Object" and border.object !="":
         
         border.old_trackable_objects.clear()
@@ -75,16 +85,6 @@ def refreshTracking(self,context):
                 objectAdd = border.old_trackable_objects.add()
                 objectAdd.name = object.name
     
-    #Removes bounding box when object or group is no longer being tracked. 
-    #Caused by clearing the 'object' or 'group' field.        
-    if border.type == "Group" and border.group == "" or border.type == "Object" and border.object == "":
-        
-        for object in border.old_trackable_objects:
-            
-            if object.name in bpy.data.objects: #If object is renamed it wont exist in object list
-                    
-                bpy.data.objects[object.name].show_bounds = False
-                       
     bpy.context.scene.frame_set(bpy.context.scene.frame_current)    
     
     updateBoundingBox(self,context)       
@@ -92,7 +92,7 @@ def refreshTracking(self,context):
 
     
 def updateBoundingBox(self,context):
-    
+        
     border = context.scene.animated_render_border
                             
     if border.type == "Object":  
@@ -116,11 +116,12 @@ def toggleObjectBoundingBox(toggle):
     
     border = bpy.context.scene.animated_render_border
     
+    #If addon is disabled
     if not border.enable:
         
         toggle = False
         
-    elif border.type == "Object": #When in object mode we are always hiding (taking value passed to function)
+    elif border.type == "Object":
         
         toggle = border.draw_bounding_box    
         
@@ -142,7 +143,8 @@ def toggleGroupBoundingBox(toggle):
         
         toggle = border.draw_bounding_box   
     
-    if border.group != "" and border.group in bpy.data.groups: #if group isn't blank AND it exits in group lists (in case of renames)
+    #if group isn't blank AND it exits in group lists (in case of renames)
+    if border.group != "" and border.group in bpy.data.groups:
     
         for object in bpy.data.groups[border.group].objects:
             
