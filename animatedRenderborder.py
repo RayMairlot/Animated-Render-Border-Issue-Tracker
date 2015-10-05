@@ -271,8 +271,8 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 #########Frame Handler########################################################
 
 #Only needed when manually running from text editor
-bpy.app.handlers.frame_change_post.clear()
-bpy.app.handlers.scene_update_post.clear()
+#bpy.app.handlers.frame_change_post.clear()
+#bpy.app.handlers.scene_update_post.clear()
 
 
 @persistent
@@ -349,6 +349,7 @@ def animated_render_border(scene):
                         verts = (chain.from_iterable((bone.head, bone.tail) for bone in obj.pose.bones))
                         
                     else:
+                        
                         bone = bpy.data.objects[border.object].pose.bones[border.bone]
                         verts = [bone.head, bone.tail]
                         
@@ -382,7 +383,6 @@ def animated_render_border(scene):
                                             
                 margin = border.margin/100
                 
-                #2* (x resolution/yresolution) = 2*1.77 = 3.54
                 #Haven't worked out why I'm multiplying 'shift_x' and 'shift_y' by 2
                 if scene.render.resolution_x > scene.render.resolution_y:
                         
@@ -746,6 +746,9 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                         if bpy.data.objects[object.name].type in ["ARMATURE","LATTICE"]:
                             
                             warningNeeded = True
+                            
+                            #Only need to find 1 object for it to be an error, can cancel after that
+                            break;
                 
                 if warningNeeded:            
                     row = column.row()
@@ -857,7 +860,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
                 
         if event.type == 'ESC':
             
-            print("Cancelled render")
+            print("Render Cancelled")
             
             endRender(self, context)
             
