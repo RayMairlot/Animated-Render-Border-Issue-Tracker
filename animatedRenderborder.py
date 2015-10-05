@@ -384,14 +384,14 @@ def animated_render_border(scene):
                 #Haven't worked out why I'm multiplying 'shift_x' and 'shift_y' by 2
                 if scene.render.resolution_x > scene.render.resolution_y:
                         
-                    aspectRatio = 2 * (scene.render.resolution_x / scene.render.resolution_y)
+                    aspectRatio = 2 * (scene.render.resolution_x / scene.render.resolution_y) * (scene.render.pixel_aspect_x / scene.render.pixel_aspect_y) 
                     
                     cameraShiftX = scene.camera.data.shift_x * 2
                     cameraShiftY = scene.camera.data.shift_y * aspectRatio
                     
                 else:
                     
-                    aspectRatio = 2 * (scene.render.resolution_y / scene.render.resolution_x)
+                    aspectRatio = 2 * (scene.render.resolution_y / scene.render.resolution_x) * (scene.render.pixel_aspect_y / scene.render.pixel_aspect_x) 
                     
                     cameraShiftX = scene.camera.data.shift_x*aspectRatio
                     cameraShiftY = scene.camera.data.shift_y*2
