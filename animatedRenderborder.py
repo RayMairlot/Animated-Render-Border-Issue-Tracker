@@ -245,7 +245,7 @@ class animatedRenderBorderProperties(bpy.types.PropertyGroup):
                                                                                                         ("Group","Group","Group"),
                                                                                                         ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
 
-    use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's vertices for boundary checks", update=updateFrame)
+    use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's 'inner points' for boundary checks", update=updateFrame)
 
     margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=updateFrame)
 
