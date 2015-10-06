@@ -271,8 +271,8 @@ bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animated
 #########Frame Handler########################################################
 
 #Only needed when manually running from text editor
-#bpy.app.handlers.frame_change_post.clear()
-#bpy.app.handlers.scene_update_post.clear()
+bpy.app.handlers.frame_change_post.clear()
+bpy.app.handlers.scene_update_post.clear()
 
 
 @persistent
