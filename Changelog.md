@@ -1,8 +1,8 @@
-Changelog:
+###Changelog:
 
-V2.0
+####V2.0
 
-Changes:
+#####Changes:
 
 + Renders can now be cancelled by pressing the 'Esc' key during a render. However, the frame currently being rendered has to finish before the rendering will stop.
 
@@ -16,7 +16,7 @@ Changes:
 
 + Most warnings now stop the render from being started until they have been fixed apart from warnings about using version of Blender previous to version 2.76 (see User Guide> Warnings for more information).
 
-+ Exceptions are now raised when calling bpy.ops.render.animated_render_border_render() from a script for any warning that would normally be displayed via the UI.
++ Exceptions are now raised when calling `bpy.ops.render.animated_render_border_render()` from a script for any warning that would normally be displayed via the UI.
 
 + Camera's 'Shift X' and 'Shift Y' properties are now taken into account when calculating the render border.
 
@@ -28,6 +28,6 @@ Changes:
 
 + Updated the 'User Guide' to take into account all changes, with explanations for new features and workflows.
 
-Fixes:
+#####Fixes:
 
 + Fixed a bug where points behind camera were incorrectly calculated.
