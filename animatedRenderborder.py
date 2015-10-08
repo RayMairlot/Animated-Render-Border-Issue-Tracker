@@ -468,6 +468,8 @@ def mainFix(context):
                 
     context.scene.render.use_border = True
     
+    bpy.context.scene.frame_set(bpy.context.scene.frame_current) 
+    
     
 def insertKeyframe(context):
     
