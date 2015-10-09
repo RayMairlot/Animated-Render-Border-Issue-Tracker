@@ -998,7 +998,7 @@ def unregister():
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_insert_keyframe)    
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)  
     bpy.utils.unregister_class(RENDER_OT_animated_render_border_refresh_values)        
-    bpy.utils.unregister_class(animatedBorderRenderProperties)
+    bpy.utils.unregister_class(animatedRenderBorderProperties)
     bpy.utils.unregister_class(AnimatedRenderBorderPreferences)    
     
     del bpy.types.Scene.animated_render_border
