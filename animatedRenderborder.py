@@ -32,7 +32,7 @@ from bpy.app.handlers import persistent
 from itertools import chain
 
 trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "ARMATURE"] #EMPTY, LAMP, CAMERA and SPEAKER objects cannot currently be tracked.
-noVertexObjectTypes = ["FONT", "META", "LAMP"]
+noVertexObjectTypes = ["FONT", "META"]
 
 #######Update functions########################################################
 
