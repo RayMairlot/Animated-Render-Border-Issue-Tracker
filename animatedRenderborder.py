@@ -21,7 +21,7 @@ bl_info = {
     "description": "Track objects or groups with the border render",
     "author": "Ray Mairlot",
     "version": (2, 0),
-    "blender": (2, 74, 0),
+    "blender": (2, 76, 0),
     "location": "Properties> Render> Animated Render Border",
     "category": "Render"}
 
@@ -446,7 +446,7 @@ def render(self, context):
         context.scene.frame_start = self.counter
         context.scene.frame_end = self.counter
          
-        bpy.ops.render.render(animation=True)
+        bpy.ops.render.render('INVOKE_DEFAULT', animation=True)
         
         context.window_manager.progress_update(self.counter)
         
