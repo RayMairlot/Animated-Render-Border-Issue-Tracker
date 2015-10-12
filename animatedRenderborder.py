@@ -262,17 +262,12 @@ class animatedRenderBorderProperties(bpy.types.PropertyGroup):
     border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxY)    
 
 
-bpy.utils.register_class(animatedRenderBorderProperties)
-
-
-bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedRenderBorderProperties)
-
 
 #########Frame Handler########################################################
 
 #Only needed when manually running from text editor
-bpy.app.handlers.frame_change_post.clear()
-bpy.app.handlers.scene_update_post.clear()
+#bpy.app.handlers.frame_change_post.clear()
+#bpy.app.handlers.scene_update_post.clear()
 
 
 @persistent
@@ -978,6 +973,10 @@ class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
                
 
 def register():
+    
+    bpy.utils.register_class(animatedRenderBorderProperties)
+    
+    bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedRenderBorderProperties)
     
     bpy.app.handlers.frame_change_post.append(animated_render_border)
     bpy.app.handlers.scene_update_post.append(updateObjectList)
