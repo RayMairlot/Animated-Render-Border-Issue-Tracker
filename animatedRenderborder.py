@@ -441,7 +441,7 @@ def render(self, context):
         context.scene.frame_start = self.counter
         context.scene.frame_end = self.counter
          
-        bpy.ops.render.render('INVOKE_DEFAULT', animation=True)
+        bpy.ops.render.render(animation=True)
         
         context.window_manager.progress_update(self.counter)
         
