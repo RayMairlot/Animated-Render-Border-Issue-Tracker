@@ -1,2 +1,0 @@
-Fixed bug where points behind camera were incorrectly calculated
-As an alternative to 'tracking' objects, the border and it's invidividual values can now be keyframed.
