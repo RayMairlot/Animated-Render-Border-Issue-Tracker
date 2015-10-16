@@ -7,7 +7,7 @@
 
 + Renders can now be cancelled by pressing the 'Esc' key during a render. However, the frame currently being rendered has to finish before the rendering will stop.
 
-+ Now font, curve, surface, meta, lattice and armature objects can be tracked in addition to mesh objects. Font and META objects can only be tracked via their bounding boxes, other objects can use bounding box or 'inner points' (vertices, lattice points, curve points etc.). Lattice and Armature objects require Blender 2.76 or later to be able to use 'bounding box' method, otherwise they will fall back to 'inner points'.
++ Now Font, Curve, Surface, Meta, Lattice and Armature objects can be tracked in addition to mesh objects. Font and Meta objects can only be tracked via their bounding boxes, other objects can use bounding box or 'inner points' (vertices, lattice points, curve points etc.). Lattice and Armature objects require Blender 2.76 or later to be able to use 'bounding box' method, otherwise they will fall back to 'inner points'.
 
 + As an alternative to 'tracking' objects, the border and it's invidividual values can now be keyframed in the new 'Keyframe' mode.
 
