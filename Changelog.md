@@ -32,3 +32,10 @@
 #####Fixes:
 
 + Fixed a bug where points behind camera were incorrectly calculated.
+
+<br>
+####V1.1
+
+#####Fixes:
+
++ Fixed bug that mean rendering an animation happened on wrong start frame.
