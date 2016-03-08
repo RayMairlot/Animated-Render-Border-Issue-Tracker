@@ -20,7 +20,7 @@ bl_info = {
     "name": "Animated Render Border",
     "description": "Track objects or groups with the border render",
     "author": "Ray Mairlot",
-    "version": (2, 1),
+    "version": (2, 0),
     "blender": (2, 76, 0),
     "location": "Properties> Render> Animated Render Border",
     "category": "Render"}
@@ -427,50 +427,25 @@ def updateObjectList(scene):
 
 def render(self, context):
     
-    #If blender is being run in the background (command line) do not use the modal renderer
-    if bpy.app.background:
-    
-        print("Rendering frame "+str(context.scene.frame_current))
-    
-        oldStart = context.scene.frame_start
-        oldEnd = context.scene.frame_end
-        oldCurrent = context.scene.frame_current
-                
-        for i in range(oldStart, oldEnd+1):
-                            
-            context.scene.frame_set(i)
-            animated_render_border(context.scene)
-            
-            context.scene.frame_start = i
-            context.scene.frame_end = i
-             
-            bpy.ops.render.render(animation=True)
-                
-        context.scene.frame_current = oldCurrent    
-        context.scene.frame_start = oldStart
-        context.scene.frame_end = oldEnd
-
+    if self.counter > self.oldEnd:
+        
+        self.finished = True
+        
     else:
-    
-        if self.counter > self.oldEnd:
-            
-            self.finished = True
-            
-        else:
-            
-            print("Rendering frame "+str(self.counter))
-                    
-            context.scene.frame_set(self.counter)
-            animated_render_border(context.scene)
-            
-            context.scene.frame_start = self.counter
-            context.scene.frame_end = self.counter
-             
-            bpy.ops.render.render(animation=True)
-            
-            context.window_manager.progress_update(self.counter)
-            
-            self.counter += context.scene.frame_step
+        
+        print("Rendering frame "+str(self.counter))
+                
+        context.scene.frame_set(self.counter)
+        animated_render_border(context.scene)
+        
+        context.scene.frame_start = self.counter
+        context.scene.frame_end = self.counter
+         
+        bpy.ops.render.render(animation=True)
+        
+        context.window_manager.progress_update(self.counter)
+        
+        self.counter += context.scene.frame_step
         
         
 def endRender(self, context):
@@ -751,7 +726,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 
                 objectIcon = "OBJECT_DATA"
                 if validObject():
-                    objectIcon = "OUTLINER_OB_"+bpy.data.objects[border.object].type
+                    objectIcon = bpy.data.objects[border.object].type+"_DATA"
                     
                     #Removed as speaker objects cannot be tracked
                     #if bpy.data.objects[border.object].type == "SPEAKER":   
@@ -881,34 +856,31 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
     oldEnd = 0
     oldCurrent = 0
 
-    #Only use modal if blender is not being run in the background (command line)
-    if not bpy.app.background:
-
-        def modal(self, context, event):
-                    
-            if event.type == 'ESC':
+    def modal(self, context, event):
                 
-                print("Render Cancelled")
-                
-                endRender(self, context)
-                
-                return {'CANCELLED'}
+        if event.type == 'ESC':
             
-            elif event.type == 'TIMER' and not self.finished:
-                
-                render(self, context)
-
-            elif self.finished:
-                
-                print("Finished rendering")
-                
-                self.report({'INFO'}, "Border rendering finished")
-                
-                endRender(self, context)
-                
-                return {'FINISHED'}
+            print("Render Cancelled")
             
-            return {'RUNNING_MODAL'}
+            endRender(self, context)
+            
+            return {'CANCELLED'}
+        
+        elif event.type == 'TIMER' and not self.finished:
+            
+            render(self, context)
+
+        elif self.finished:
+            
+            print("Finished rendering")
+            
+            self.report({'INFO'}, "Border rendering finished")
+            
+            endRender(self, context)
+            
+            return {'FINISHED'}
+        
+        return {'RUNNING_MODAL'}
      
     
     def execute(self, context):
@@ -918,27 +890,18 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
                              
         if bpy.context.scene.camera:
             
-            #If blender is running in the background (command line) don't use modal renderer
-            if bpy.app.background:
-                
-                render(self, context)
-                
-                return {'FINISHED'}
-                                    
-            else:
-                
-                self.finished = False
-                self.counter = bpy.context.scene.frame_start
-                self.timer = context.window_manager.event_timer_add(0.1, context.window)
-                self.oldStart = bpy.context.scene.frame_start
-                self.oldEnd = bpy.context.scene.frame_end
-                self.oldCurrent = bpy.context.scene.frame_current
-                
-                context.window_manager.progress_begin(0,context.scene.frame_end)
-                
-                context.window_manager.modal_handler_add(self)
-                
-                return {'RUNNING_MODAL'}
+            self.finished = False
+            self.counter = bpy.context.scene.frame_start
+            self.timer = context.window_manager.event_timer_add(0.1, context.window)
+            self.oldStart = bpy.context.scene.frame_start
+            self.oldEnd = bpy.context.scene.frame_end
+            self.oldCurrent = bpy.context.scene.frame_current
+            
+            context.window_manager.progress_begin(0,context.scene.frame_end)
+            
+            context.window_manager.modal_handler_add(self)
+            
+            return {'RUNNING_MODAL'}
         
         else:
                         
