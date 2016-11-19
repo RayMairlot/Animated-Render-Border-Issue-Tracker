@@ -1,4 +1,4 @@
->*While the source code for this add-on is available here for free, if this add-on has helped you please do consider supporting me by buying it on the blender market: https://blendermarket.com/products/animated-render-border/*
+*While the source code for this add-on is available here for free, if this add-on has helped you please do consider supporting me by buying it on the blender market: https://blendermarket.com/products/animated-render-border/*
 
 -
 
