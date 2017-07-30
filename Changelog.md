@@ -1,16 +1,16 @@
-###Changelog:
+### Changelog:
 ---
 
-####V2.1
+#### V2.1
 
-#####Fixes:
+##### Fixes:
 
 + Fixed an issue where rendering from the command line would fail due to the modal operator not working in 'background' (-b) mode.
 
 <br>
-####V2.0
+#### V2.0
 
-#####Changes:
+##### Changes:
 
 + Renders can now be cancelled by pressing the 'Esc' key during a render. However, the frame currently being rendered has to finish before the rendering will stop.
 
@@ -36,7 +36,7 @@
 
 + Updated the 'User Guide' to take into account all changes, with explanations for new features and workflows.
 
-#####Fixes:
+##### Fixes:
 
 + Fixed a bug where points behind camera were incorrectly calculated.
 
