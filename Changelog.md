@@ -8,6 +8,7 @@
 + Fixed an issue where rendering from the command line would fail due to the modal operator not working in 'background' (-b) mode.
 
 <br>
+
 #### V2.0
 
 ##### Changes:
@@ -41,8 +42,9 @@
 + Fixed a bug where points behind camera were incorrectly calculated.
 
 <br>
-####V1.1
 
-#####Fixes:
+#### V1.1
+
+##### Fixes:
 
 + Fixed bug that mean rendering an animation happened on wrong start frame.
