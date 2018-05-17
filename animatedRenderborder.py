@@ -228,7 +228,7 @@ def updateBorderWithMaxY(self,context):
 #########Properties###########################################################
 
 
-class animatedRenderBorderProperties(bpy.types.PropertyGroup):
+class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
     
     old_trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
@@ -1008,40 +1008,39 @@ class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
         row.prop(self, "display_border_dimensions")
                
 
+classes = [
+    RENDER_PT_animated_render_border,
+    RENDER_OT_animated_render_border_render,
+    RENDER_OT_animated_render_border_fix,
+    RENDER_OT_animated_render_border_insert_keyframe,
+    RENDER_OT_animated_render_border_delete_keyframe,
+    RENDER_OT_animated_render_border_refresh_values,
+    AnimatedRenderBorderProperties,
+    AnimatedRenderBorderPreferences
+]
+
+
 def register():
-    
-    bpy.utils.register_class(animatedRenderBorderProperties)
-    
-    bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedRenderBorderProperties)
-    
+
+    from bpy.utils import register_class
+    for cls in classes:
+        register_class(cls)    
+
+    bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=AnimatedRenderBorderProperties)
     bpy.app.handlers.frame_change_post.append(animated_render_border)
     bpy.app.handlers.scene_update_post.append(updateObjectList)
-    
-    bpy.utils.register_class(RENDER_PT_animated_render_border)
-    bpy.utils.register_class(RENDER_OT_animated_render_border_render)
-    bpy.utils.register_class(RENDER_OT_animated_render_border_fix)
-    bpy.utils.register_class(RENDER_OT_animated_render_border_insert_keyframe)   
-    bpy.utils.register_class(RENDER_OT_animated_render_border_delete_keyframe)  
-    bpy.utils.register_class(RENDER_OT_animated_render_border_refresh_values)  
-    bpy.utils.register_class(AnimatedRenderBorderPreferences)        
-    
-    
+
+
 def unregister():
-    
+
+    from bpy.utils import unregister_class
+    for cls in reversed(classes):
+        unregister_class(cls)
+
     bpy.app.handlers.frame_change_post.remove(animated_render_border)        
     bpy.app.handlers.scene_update_post.remove(updateObjectList)
-    
-    bpy.utils.unregister_class(RENDER_PT_animated_render_border)
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_render)
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_fix)
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_insert_keyframe)    
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_delete_keyframe)  
-    bpy.utils.unregister_class(RENDER_OT_animated_render_border_refresh_values)        
-    bpy.utils.unregister_class(animatedRenderBorderProperties)
-    bpy.utils.unregister_class(AnimatedRenderBorderPreferences)    
-    
     del bpy.types.Scene.animated_render_border
-    
+
 
 if __name__ == "__main__":
     register()
