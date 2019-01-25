@@ -853,7 +853,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                      
             row.operator("render.animated_render_border_render", text=renderLabel, icon="RENDER_ANIMATION")
             
-        if bpy.context.user_preferences.addons['animatedRenderborder'].preferences.display_border_dimensions:
+        if bpy.context.preferences.addons['animatedRenderborder'].preferences.display_border_dimensions:
             
             resolutionX = (scene.render.resolution_x/100)*scene.render.resolution_percentage
             resolutionY = (scene.render.resolution_y/100)*scene.render.resolution_percentage
