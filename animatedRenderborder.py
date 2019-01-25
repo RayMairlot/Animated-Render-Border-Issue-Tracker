@@ -350,7 +350,7 @@ def animated_render_border(scene):
                         
                 wm = obj.matrix_world     #Vertices will be in local space unless multiplied by the world matrix
                 for coord in verts:
-                    coords_2d.append(world_to_camera_view(scene, camera, wm*coord))
+                    coords_2d.append(world_to_camera_view(scene, camera, wm @ coord))
             
             #If a group is empty there will be no coordinates
             if len(coords_2d) > 0:
