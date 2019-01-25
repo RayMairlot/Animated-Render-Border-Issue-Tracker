@@ -573,10 +573,11 @@ def checkForErrors():
 
             errors += "\n The object selected to be tracked does not exist."
 
-        elif bpy.data.objects[border.object].type == "ARMATURE" and \
-             border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+        if border.object != "" and border.object in bpy.data.objects:
+            if bpy.data.objects[border.object].type == "ARMATURE" and \
+               border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
 
-            errors += "\n The bone selected to be tracked does not exist."
+                errors += "\n The bone selected to be tracked does not exist."
      
     elif border.type == "Collection" and border.collection != "" and border.collection not in bpy.data.collections:
 
