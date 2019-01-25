@@ -18,7 +18,7 @@
 
 bl_info = {
     "name": "Animated Render Border",
-    "description": "Track objects or groups with the border render",
+    "description": "Track objects or collections with the border render",
     "author": "Ray Mairlot",
     "version": (2, 1),
     "blender": (2, 80, 0),
@@ -157,7 +157,7 @@ def toggleCollectionBoundingBox(toggle):
             
             else:
                 
-                if object.name != border.object: #object may be in a group AND be the selected tracking object
+                if object.name != border.object: #object may be in a collection AND be the selected tracking object
                 
                     if object.type in trackableObjectTypes:
                             
@@ -240,7 +240,7 @@ class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
 
     collection: bpy.props.StringProperty(description = "The collection to track", update=refreshTracking)
 
-    type: bpy.props.EnumProperty(description = "The type of tracking to do, Object or Group or Keyframe", items=[
+    type: bpy.props.EnumProperty(description = "The type of tracking to do, Object or Collection or Keyframe", items=[
                                                                                                         ("Object","Object","Object"),
                                                                                                         ("Collection","Collection","Collection"),
                                                                                                         ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
@@ -352,7 +352,7 @@ def animated_render_border(scene):
                 for coord in verts:
                     coords_2d.append(world_to_camera_view(scene, camera, wm @ coord))
             
-            #If a group is empty there will be no coordinates
+            #If a collection is empty there will be no coordinates
             if len(coords_2d) > 0:
                 
                 minX = 1
@@ -636,7 +636,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             column = split.column()
             column.label(text="'Border' is disabled in", icon="ERROR")
-            column.label(text="'Dimensions' panel.", icon="SCULPT_DYNTOPO")
+            column.label(text="'Dimensions' panel.", icon="BLANK1")
             
             column = split.column()         
             column.operator("render.animated_render_border_fix", text="Fix")
@@ -648,7 +648,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row = layout.row()
                 row.label(text="Active camera must be a Camera", icon="ERROR")
                 row = layout.row()
-                row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="SCULPT_DYNTOPO")
+                row.label(text="object, not '"+scene.camera.type.lower().capitalize()+"'.", icon="BLANK1")
                 
                 error+=1
         
@@ -662,7 +662,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = layout.row()
             row.label(text="The object selected to be tracked", icon="ERROR")
             row = layout.row()
-            row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
+            row.label(text="does not exist.", icon="BLANK1")
              
             error+=1
          
@@ -670,7 +670,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             row = layout.row()
             row.label(text="The collection selected to be tracked", icon="ERROR") 
             row = layout.row()
-            row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
+            row.label(text="does not exist.", icon="BLANK1")
              
             error+=1        
          
@@ -689,7 +689,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row = layout.row()
                 row.label(text="The selected collection has no trackable", icon="ERROR") 
                 row = layout.row()
-                row.label(text="objects.", icon="SCULPT_DYNTOPO")
+                row.label(text="objects.", icon="BLANK1")
                 
                 error+=1
                      
@@ -746,7 +746,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     row = column.row()
                     row.label(text=bpy.data.objects[border.object].type.lower().capitalize()+" objects can only use bounding", icon="ERROR")
                     row = column.row()
-                    row.label(text="box tracking in Blender 2.76 and later.", icon="SCULPT_DYNTOPO")
+                    row.label(text="box tracking in Blender 2.76 and later.", icon="BLANK1")
                     row = column.row()   
                 
                 objectIcon = "OBJECT_DATA"
@@ -779,9 +779,9 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     row = column.row()
                     row.label(text="Armature or Lattice objects in this collection", icon="ERROR")
                     row = column.row()
-                    row.label(text="can only use bounding box tracking in", icon="SCULPT_DYNTOPO")
+                    row.label(text="can only use bounding box tracking in", icon="BLANK1")
                     row = column.row()
-                    row.label(text="Blender 2.76 and later.", icon="SCULPT_DYNTOPO")
+                    row.label(text="Blender 2.76 and later.", icon="BLANK1")
                     row = column.row()  
                 
                 row = column.row()
