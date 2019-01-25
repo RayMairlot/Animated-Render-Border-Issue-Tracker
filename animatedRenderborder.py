@@ -230,36 +230,36 @@ def updateBorderWithMaxY(self,context):
 
 class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
     
-    old_trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    old_trackable_objects: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    trackable_objects = bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
+    trackable_objects: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)
     
-    object = bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
+    object: bpy.props.StringProperty(description = "The object to track", update=refreshTracking)
     
-    bone = bpy.props.StringProperty(description = "The bone to track", update=refreshTracking)
+    bone: bpy.props.StringProperty(description = "The bone to track", update=refreshTracking)
 
-    group = bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
+    group: bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
 
-    type = bpy.props.EnumProperty(description = "The type of tracking to do, Object or Group or Keyframe", items=[
+    type: bpy.props.EnumProperty(description = "The type of tracking to do, Object or Group or Keyframe", items=[
                                                                                                         ("Object","Object","Object"),
                                                                                                         ("Group","Group","Group"),
                                                                                                         ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
 
-    use_bounding_box = bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's 'inner points' for boundary checks", update=updateFrame)
+    use_bounding_box: bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's 'inner points' for boundary checks", update=updateFrame)
 
-    margin = bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=updateFrame)
+    margin: bpy.props.IntProperty(default=3, description="Add a margin around the object's bounds", update=updateFrame)
 
-    draw_bounding_box = bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
+    draw_bounding_box: bpy.props.BoolProperty(default=False, description="Draw the bounding boxes of the objects being tracked", update=updateBoundingBox)
 
-    enable = bpy.props.BoolProperty(default=False, description="Enable Animated Render Border", update=toggleTracking)
+    enable: bpy.props.BoolProperty(default=False, description="Enable Animated Render Border", update=toggleTracking)
     
-    border_min_x = bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinX)
+    border_min_x: bpy.props.FloatProperty(description="Minimum X value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinX)
     
-    border_max_x = bpy.props.FloatProperty(description="Maximum X value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxX)
+    border_max_x: bpy.props.FloatProperty(description="Maximum X value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxX)
 
-    border_min_y = bpy.props.FloatProperty(description="Minimum Y value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinY)
+    border_min_y: bpy.props.FloatProperty(description="Minimum Y value for the render border", default=0, min=0, max=0.99, update=updateBorderWithMinY)
 
-    border_max_y = bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxY)    
+    border_max_y: bpy.props.FloatProperty(description="Maximum Y value for the render border", default=1, min=0.01, max=1, update=updateBorderWithMaxY)    
 
 
 
@@ -1000,7 +1000,7 @@ class RENDER_OT_animated_render_border_refresh_values(bpy.types.Operator):
 class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
     bl_idname = __name__  
     
-    display_border_dimensions = bpy.props.BoolProperty(name="Display border dimensions",default=False,description="Shows the dimensions of the current border, under the 'Render Animation' button")
+    display_border_dimensions: bpy.props.BoolProperty(name="Display border dimensions",default=False,description="Shows the dimensions of the current border, under the 'Render Animation' button")
 
     def draw(self, context):
         layout = self.layout
