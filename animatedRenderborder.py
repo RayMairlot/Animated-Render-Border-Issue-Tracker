@@ -526,9 +526,16 @@ def validObject():
     
     border = bpy.context.scene.animated_render_border
     
-    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects: #If object is chosen as object but renamed, it can't be tracked.
+    if border.type == "Object":
         
-        return True    
+        if border.object != "" and border.object in bpy.data.objects: #If object is chosen as object but renamed, it can't be tracked.
+        
+            if bpy.data.objects[border.object].type == "ARMATURE" and \
+               border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+
+                return False
+
+            return True
   
     
 def validCollection():
@@ -560,9 +567,16 @@ def checkForErrors():
 
         errors += "\n No camera is set in scene properties."
        
-    if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
+    if border.type == "Object":    
 
-        errors += "\n The object selected to be tracked does not exist."
+        if border.object != "" and border.object not in bpy.data.objects:
+
+            errors += "\n The object selected to be tracked does not exist."
+
+        elif bpy.data.objects[border.object].type == "ARMATURE" and \
+             border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+
+            errors += "\n The bone selected to be tracked does not exist."
      
     elif border.type == "Collection" and border.collection != "" and border.collection not in bpy.data.collections:
 
@@ -659,13 +673,25 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             error+=1
             
-        if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
-            row = layout.row()
-            row.label(text="The object selected to be tracked", icon="ERROR")
-            row = layout.row()
-            row.label(text="does not exist.", icon="BLANK1")
-             
-            error+=1
+        if border.type == "Object":
+            
+            if border.object != "" and border.object not in bpy.data.objects:
+                row = layout.row()
+                row.label(text="The object selected to be tracked", icon="ERROR")
+                row = layout.row()
+                row.label(text="does not exist.", icon="BLANK1")
+                 
+                error+=1
+
+            if border.object != "" and border.object in bpy.data.objects:
+                if bpy.data.objects[border.object].type == "ARMATURE" and \
+                   border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+                    row = layout.row()
+                    row.label(text="The bone selected to be tracked", icon="ERROR")
+                    row = layout.row()
+                    row.label(text="does not exist.", icon="BLANK1")
+                     
+                    error+=1
          
         elif border.type == "Collection" and border.collection != "" and border.collection not in bpy.data.collections:
             row = layout.row()
@@ -800,9 +826,10 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin = row.column()
             columnMargin.enabled = enabled    
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
-            
-            if validObject():
-                if bpy.data.objects[border.object].type == "ARMATURE":
+
+            if border.object != "" and border.object in bpy.data.objects:
+
+                if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object":
         
                    row = column.row()
                    row.label(text="Bone to track (optional):")
