@@ -267,7 +267,7 @@ class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
 
 #Only needed when manually running from text editor
 #bpy.app.handlers.frame_change_post.clear()
-#bpy.app.handlers.scene_update_post.clear()
+#bpy.app.handlers.depsgraph_update_post.clear()
 
 
 @persistent
@@ -1028,7 +1028,7 @@ def register():
 
     bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=AnimatedRenderBorderProperties)
     bpy.app.handlers.frame_change_post.append(animated_render_border)
-    bpy.app.handlers.scene_update_post.append(updateObjectList)
+    bpy.app.handlers.depsgraph_update_post.append(updateObjectList)
 
 
 def unregister():
@@ -1038,7 +1038,7 @@ def unregister():
         unregister_class(cls)
 
     bpy.app.handlers.frame_change_post.remove(animated_render_border)        
-    bpy.app.handlers.scene_update_post.remove(updateObjectList)
+    bpy.app.handlers.depsgraph_update_post.remove(updateObjectList)
     del bpy.types.Scene.animated_render_border
 
 
