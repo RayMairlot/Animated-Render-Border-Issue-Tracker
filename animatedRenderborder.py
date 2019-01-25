@@ -47,7 +47,7 @@ def refreshTracking(self,context):
        
     border = context.scene.animated_render_border
     
-    #Removes bounding box when object or group is no longer being tracked.       
+    #Removes bounding box when object or collection is no longer being tracked.       
     for object in border.old_trackable_objects:
 
         #If object is renamed or deleted it wont exist in object list
@@ -77,10 +77,10 @@ def refreshTracking(self,context):
         objectAdd = border.old_trackable_objects.add()
         objectAdd.name = border.object
         
-    elif border.type == "Group" and border.group !="":
+    elif border.type == "Collection" and border.collection !="":
         
         border.old_trackable_objects.clear()
-        for object in bpy.data.groups[border.group].objects:
+        for object in bpy.data.collections[border.collection].objects:
             if object.type in trackableObjectTypes:
                 objectAdd = border.old_trackable_objects.add()
                 objectAdd.name = object.name
@@ -98,17 +98,17 @@ def updateBoundingBox(self,context):
     if border.type == "Object":  
         
         toggleObjectBoundingBox(True)
-        toggleGroupBoundingBox(False)
+        toggleCollectionBoundingBox(False)
         
-    elif border.type == "Group":
+    elif border.type == "Collection":
         
         toggleObjectBoundingBox(False)
-        toggleGroupBoundingBox(True)
+        toggleCollectionBoundingBox(True)
         
     elif border.type == "Keyframe":
                     
         toggleObjectBoundingBox(False)                       
-        toggleGroupBoundingBox(False)    
+        toggleCollectionBoundingBox(False)    
 
   
   
@@ -131,7 +131,7 @@ def toggleObjectBoundingBox(toggle):
 
 
     
-def toggleGroupBoundingBox(toggle):
+def toggleCollectionBoundingBox(toggle):
     
     border = bpy.context.scene.animated_render_border
     
@@ -139,17 +139,17 @@ def toggleGroupBoundingBox(toggle):
         
         toggle = False
         
-    elif border.type == "Group":
+    elif border.type == "Collection":
         
         toggle = border.draw_bounding_box   
     
-    #if group isn't blank AND it exits in group lists (in case of renames)
-    if border.group != "" and border.group in bpy.data.groups:
+    #if collection isn't blank AND it exits in collection lists (in case of renames)
+    if border.collection != "" and border.collection in bpy.data.collections:
     
-        for object in bpy.data.groups[border.group].objects:
+        for object in bpy.data.collections[border.collection].objects:
             
-            #When in group mode all objects should be toggled, otherwise all objects apart from the one being tracked in object mode should be.
-            if border.type == "Group":
+            #When in collection mode all objects should be toggled, otherwise all objects apart from the one being tracked in object mode should be.
+            if border.type == "Collection":
                 
                 if object.type in trackableObjectTypes:
                     
@@ -238,11 +238,11 @@ class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
     
     bone: bpy.props.StringProperty(description = "The bone to track", update=refreshTracking)
 
-    group: bpy.props.StringProperty(description = "The group to track", update=refreshTracking)
+    collection: bpy.props.StringProperty(description = "The collection to track", update=refreshTracking)
 
     type: bpy.props.EnumProperty(description = "The type of tracking to do, Object or Group or Keyframe", items=[
                                                                                                         ("Object","Object","Object"),
-                                                                                                        ("Group","Group","Group"),
+                                                                                                        ("Collection","Collection","Collection"),
                                                                                                         ("Keyframe","Keyframe","Keyframe")], update=refreshTracking)
 
     use_bounding_box: bpy.props.BoolProperty(default=True, description="Use object's bounding box (less reliable, quicker) or object's 'inner points' for boundary checks", update=updateFrame)
@@ -285,13 +285,13 @@ def animated_render_border(scene):
     
     if border.enable and cameraExists:
         #If object is chosen but consequently renamed, it can't be tracked.
-        if validObject() or validGroup(): 
+        if validObject() or validCollection(): 
         
             objs = [] 
             if border.type == "Object":  
                 objs = [bpy.data.objects[border.object]]
-            elif border.type == "Group":
-                objs = (object for object in bpy.data.groups[border.group].objects if object.type in trackableObjectTypes) #Type of objects that can be tracked
+            elif border.type == "Collection":
+                objs = (object for object in bpy.data.collections[border.collection].objects if object.type in trackableObjectTypes) #Type of objects that can be tracked
             
             coords_2d = []
             for obj in objs:
@@ -530,11 +530,11 @@ def validObject():
         return True    
   
     
-def validGroup():
+def validCollection():
     
     border = bpy.context.scene.animated_render_border
     
-    if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+    if border.type == "Collection" and border.collection != "" and border.collection in bpy.data.collections:
         
         return True   
     
@@ -563,15 +563,15 @@ def checkForErrors():
 
         errors += "\n The object selected to be tracked does not exist."
      
-    elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
+    elif border.type == "Collection" and border.collection != "" and border.collection not in bpy.data.collections:
 
-        errors += "\n The group selected to be tracked does not exist."
+        errors += "\n The collection selected to be tracked does not exist."
      
-    #Checks for empty groups or groups with no trackable objects
+    #Checks for empty collections or collections with no trackable objects
     trackableObjects = 0
-    if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+    if border.type == "Collection" and border.collection != "" and border.collection in bpy.data.collections:
 
-        for object in bpy.data.groups[border.group].objects:
+        for object in bpy.data.collections[border.collection].objects:
 
             if object.type in trackableObjectTypes:
 
@@ -579,7 +579,7 @@ def checkForErrors():
 
         if trackableObjects < 1:
 
-            errors += "\n The selected group has no trackable objects."
+            errors += "\n The selected collection has no trackable objects."
  
     if errors != "":
         errors = "\n The following error(s) have to be addressed before rendering:"+errors
@@ -666,19 +666,19 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
              
             error+=1
          
-        elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
+        elif border.type == "Collection" and border.collection != "" and border.collection not in bpy.data.collections:
             row = layout.row()
-            row.label(text="The group selected to be tracked", icon="ERROR") 
+            row.label(text="The collection selected to be tracked", icon="ERROR") 
             row = layout.row()
             row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
              
             error+=1        
          
-        #Checks for empty groups or groups with no trackable objects
+        #Checks for empty collections or collections with no trackable objects
         trackableObjects = 0
-        if border.type == "Group" and border.group != "" and border.group in bpy.data.groups:
+        if border.type == "Collection" and border.collection != "" and border.collection in bpy.data.collections:
             
-            for object in bpy.data.groups[border.group].objects:
+            for object in bpy.data.collections[border.collection].objects:
                 
                 if object.type in trackableObjectTypes:
                     
@@ -687,7 +687,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             if trackableObjects < 1:
                 
                 row = layout.row()
-                row.label(text="The selected group has no trackable", icon="ERROR") 
+                row.label(text="The selected collection has no trackable", icon="ERROR") 
                 row = layout.row()
                 row.label(text="objects.", icon="SCULPT_DYNTOPO")
                 
@@ -760,13 +760,13 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.prop_search(scene.animated_render_border, "object", scene.animated_render_border, "trackable_objects", text="", icon=objectIcon) #Where my property is, name of property, where list I want is, name of list                    
                 
             else:
-                row.label(text="Group to track:")
+                row.label(text="Collection to track:")
                 
                 #Armatures and Lattices can only be tracked in blender 2.76 and later.
                 warningNeeded = False
-                if validGroup() and bpy.app.version < (2, 76, 0) and border.use_bounding_box:
+                if validCollection() and bpy.app.version < (2, 76, 0) and border.use_bounding_box:
                 
-                    for object in bpy.data.groups[border.group].objects:
+                    for object in bpy.data.collections[border.collection].objects:
                         
                         if bpy.data.objects[object.name].type in ["ARMATURE","LATTICE"]:
                             
@@ -777,7 +777,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 
                 if warningNeeded:            
                     row = column.row()
-                    row.label(text="Armature or Lattice objects in this group", icon="ERROR")
+                    row.label(text="Armature or Lattice objects in this collection", icon="ERROR")
                     row = column.row()
                     row.label(text="can only use bounding box tracking in", icon="SCULPT_DYNTOPO")
                     row = column.row()
@@ -785,11 +785,11 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     row = column.row()  
                 
                 row = column.row()
-                row.prop_search(scene.animated_render_border, "group", bpy.data, "groups", text="")
+                row.prop_search(scene.animated_render_border, "collection", bpy.data, "collections", text="")
             
             
             if border.type == "Object" and border.object == "" or \
-               border.type == "Group" and border.group == "":
+               border.type == "Collection" and border.collection == "":
                                 
                 enabled = False
             else:
@@ -819,7 +819,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                     
                     noVertices = True
                     
-            elif border.type == "Group" and border.group == "":
+            elif border.type == "Collection" and border.collection == "":
                 
                     noVertices = True
                     
