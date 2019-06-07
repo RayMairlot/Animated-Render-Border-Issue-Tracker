@@ -526,9 +526,17 @@ def validObject():
     
     border = bpy.context.scene.animated_render_border
     
-    if border.type == "Object" and border.object != "" and border.object in bpy.data.objects: #If object is chosen as object but renamed, it can't be tracked.
+    if border.type == "Object":
         
-        return True    
+        #If object is chosen as object but renamed, it can't be tracked.
+        if border.object != "" and border.object in bpy.data.objects:
+        
+            if bpy.data.objects[border.object].type == "ARMATURE" and \
+               border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+
+                return False
+
+            return True
   
     
 def validGroup():
@@ -559,11 +567,19 @@ def checkForErrors():
     else:
 
         errors += "\n No camera is set in scene properties."
-       
-    if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
 
-        errors += "\n The object selected to be tracked does not exist."
-     
+    if border.type == "Object":    
+
+        if border.object != "" and border.object not in bpy.data.objects:
+
+            errors += "\n The object selected to be tracked does not exist."
+
+        if border.object != "" and border.object in bpy.data.objects:
+            if bpy.data.objects[border.object].type == "ARMATURE" and \
+               border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+
+                errors += "\n The bone selected to be tracked does not exist."
+
     elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
 
         errors += "\n The group selected to be tracked does not exist."
@@ -659,13 +675,25 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             error+=1
             
-        if border.type == "Object" and border.object != "" and border.object not in bpy.data.objects:    
-            row = layout.row()
-            row.label(text="The object selected to be tracked", icon="ERROR")
-            row = layout.row()
-            row.label(text="does not exist.", icon="SCULPT_DYNTOPO")
-             
-            error+=1
+        if border.type == "Object":
+            
+            if border.object != "" and border.object not in bpy.data.objects:
+                row = layout.row()
+                row.label(text="The object selected to be tracked", icon="ERROR")
+                row = layout.row()
+                row.label(text="does not exist.", icon="BLANK1")
+                 
+                error+=1
+
+            if border.object != "" and border.object in bpy.data.objects:
+                if bpy.data.objects[border.object].type == "ARMATURE" and \
+                   border.bone != "" and border.bone not in bpy.data.objects[border.object].pose.bones:
+                    row = layout.row()
+                    row.label(text="The bone selected to be tracked", icon="ERROR")
+                    row = layout.row()
+                    row.label(text="does not exist.", icon="BLANK1")
+                     
+                    error+=1
          
         elif border.type == "Group" and border.group != "" and border.group not in bpy.data.groups:
             row = layout.row()
@@ -801,14 +829,16 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             columnMargin.enabled = enabled    
             columnMargin.prop(scene.animated_render_border, "margin", text="Margin")    
             
-            if validObject():
-                if bpy.data.objects[border.object].type == "ARMATURE":
+            if border.object != "" and border.object in bpy.data.objects:
+
+                if bpy.data.objects[border.object].type == "ARMATURE" and border.type == "Object":
         
-                   row = column.row()
-                   row.label(text="Bone to track (optional):")
-                   row = column.row()
-                   row.prop_search(scene.animated_render_border, "bone", bpy.data.objects[border.object].data, "bones", text="", icon="BONE_DATA") #Where my property is, name of property, where list I want is, name of list
-                   row.label(text="")    
+                    row = column.row()
+                    row.label(text="Bone to track (optional):")
+                    row = column.row()
+                    #Where my property is, name of property, where list I want is, name of list
+                    row.prop_search(scene.animated_render_border, "bone", bpy.data.objects[border.object].data, "bones", text="", icon="BONE_DATA")
+                    row.label(text="")    
                 
             row = column.row()
             
