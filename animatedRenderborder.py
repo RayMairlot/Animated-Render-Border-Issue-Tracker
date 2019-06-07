@@ -958,7 +958,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
                 
                 self.finished = False
                 self.counter = bpy.context.scene.frame_start
-                self.timer = context.window_manager.event_timer_add(0.1, context.window)
+                self.timer = context.window_manager.event_timer_add(0.1, window=context.window)
                 self.oldStart = bpy.context.scene.frame_start
                 self.oldEnd = bpy.context.scene.frame_end
                 self.oldCurrent = bpy.context.scene.frame_current
