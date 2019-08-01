@@ -33,6 +33,7 @@ from itertools import chain
 
 trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "ARMATURE"] #EMPTY, LAMP, CAMERA and SPEAKER objects cannot currently be tracked.
 noVertexObjectTypes = ["FONT", "META"]
+invalidRenderFormats = {}
 
 #######Update functions########################################################
 
@@ -545,7 +546,19 @@ def validCollection():
     if border.type == "Collection" and border.collection != "" and border.collection in bpy.data.collections:
         
         return True   
+
+
+def getMovieFormats():
+
+    fileFormats = bpy.context.scene.render.image_settings.bl_rna.properties['file_format'].enum_items.items()
+
+    return dict([(f[1].identifier, f[1].name) for f in fileFormats if f[1].icon == "FILE_MOVIE"])
+
+
+def validRenderFormat():
     
+    return bpy.context.scene.render.image_settings.file_format not in invalidRenderFormats
+
     
 def checkForErrors():
     
@@ -596,7 +609,11 @@ def checkForErrors():
         if trackableObjects < 1:
 
             errors += "\n The selected collection has no trackable objects."
- 
+
+    if not validRenderFormat():
+
+        errors += "\n File format must be an image format not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'."
+
     if errors != "":
         errors = "\n The following error(s) have to be addressed before rendering:"+errors
         raise Exception(errors)         
@@ -617,8 +634,9 @@ def refreshUIValues(context):
     border.border_max_x = max_x
     border.border_min_y = min_y
     border.border_max_y = max_y
-      
-      
+
+
+
 ###########UI################################################################
 
 
@@ -720,6 +738,15 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.label(text="objects.", icon="BLANK1")
                 
                 error+=1
+
+        if not validRenderFormat():
+
+            row = layout.row()
+            row.label(text="Output file format must be an image", icon="ERROR")
+            row = layout.row()
+            row.label(text="format, not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'.", icon="BLANK1")
+
+            error+=1
                      
         column = layout.column()
          
@@ -1050,6 +1077,9 @@ classes = [
 
 
 def register():
+
+    global invalidRenderFormats
+    invalidRenderFormats = getMovieFormats()
 
     from bpy.utils import register_class
     for cls in classes:
