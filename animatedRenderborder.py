@@ -1053,7 +1053,7 @@ class RENDER_OT_animated_render_border_delete_keyframe(bpy.types.Operator):
 class RENDER_OT_animated_render_border_refresh_values(bpy.types.Operator):
     """Refresh the UI values in case the border was manually redrawn in the viewport"""
     bl_idname = "render.animated_render_border_refresh_values"
-    bl_label = "Delete Animated Render Border Keyframe"
+    bl_label = "Refresh Animated Render Border UI Values"
 
     def execute(self, context):
      
