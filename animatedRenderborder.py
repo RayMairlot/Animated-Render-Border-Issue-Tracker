@@ -615,7 +615,7 @@ def checkForErrors():
 
     if not validRenderFormat():
 
-        errors += "\n File format must be an image format not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'."
+        errors += "\n Output file format must be an image format, not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'."
 
     if errors != "":
         errors = "\n The following error(s) have to be addressed before rendering:"+errors
