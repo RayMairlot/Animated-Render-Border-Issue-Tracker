@@ -4,7 +4,7 @@
 
 :information_source: **Updating the Add-on for Blender 2.8**: See the ['Add-on Versions and Blender Compatibility'](#AddOnVersionsAndBlenderCompatability) section for information about 2.8.
 
-![ARB Featured Image](/README%20images/ARB%20Github%20Featured%20Product%20image.png)
+![ARB Featured Image](/2.79%20Compatible%20Version/README%20images/ARB%20Github%20Featured%20Product%20image.png)
 
 ## :notebook: Contents
   
@@ -46,7 +46,7 @@ You can also always use the ‘margin’ feature of the add-on to make sure you�
 
 |Object Mode|Group Mode|Keyframe Mode|
 |---|---|---|
-|![Object Mode](/README%20images/Object%20Mode.png)|![Group Mode](/README%20images/Group%20Mode.png)|![Keyframe Mode](/README%20images/Keyframe%20Mode.png)|
+|![Object Mode](/2.79%20Compatible%20Version/README%20images/Object%20Mode.png)|![Group Mode](/2.79%20Compatible%20Version/README%20images/Group%20Mode.png)|![Keyframe Mode](/2.79%20Compatible%20Version/README%20images/Keyframe%20Mode.png)|
 
 <br>
 
