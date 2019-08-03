@@ -46,7 +46,7 @@ You can also always use the ‘margin’ feature of the add-on to make sure you�
 
 |Object Mode|Group Mode|Keyframe Mode|
 |---|---|---|
-|![Object Mode](/README%20images/Object%20Mode.png)|![Group Mode](/README%20images/Group%20Mode.png)|![Keyframe Mode](/README%20images/Keyframe%20Mode.png)|
+|![Object Mode](/README%20images/Object%20Mode.png)|![Group Mode](/README%20images/Collection%20Mode.png)|![Keyframe Mode](/README%20images/Keyframe%20Mode.png)|
 
 <br>
 
