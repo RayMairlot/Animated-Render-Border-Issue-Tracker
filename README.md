@@ -14,7 +14,7 @@
    - [Changelog](#Changelog)
  - [Installation](#Installation)
  - [Usage](#Usage)
-   - [Steps to start using ‘Object’ or 'Collection’ tracking]-(#StepsToStartUsingObjectOrCollectionTracking)
+   - [Steps to start using ‘Object’ or 'Collection’ tracking](#StepsToStartUsingObjectOrCollectionTracking)
    - [Steps to start using ‘Keyframe’ mode](#StepsToStartUsingKeyframeMode)
    - [Command Line Rendering](#CommandLineRendering)
  - [Options](#Options)
