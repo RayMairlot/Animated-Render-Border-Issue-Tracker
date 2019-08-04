@@ -22,6 +22,7 @@
  - [Warnings](#Warnings)
  - [User Preferences](#UserPreferences)
  - [Limitations](#Limitations)
+   - [File formats which can't be used](#FileFormatsWhichCantBeUsed)
    - [Object types which can't be tracked](#ObjectTypesWhichCantBeTracked)
    - [Different render borders for different render layers](#DifferentRenderBordersForDifferentRenderLayers)
    - ['Panoramic' lens types for cameras, e.g. Equirectangular, Mirror Ball etc.](#PanoramicLensTypesForCamerasEgEquirectangularMirrorBallEtc)
@@ -375,6 +376,10 @@ There are various warnings that will appear so as to alert you to things that wi
  
     If the collection to be tracked is empty or none of the objects can be tracked, this error appears. The collection must contain one of the following types of object for tracking to be possible: Meshes, Text objects, Curves, Surfaces, Meta objects, Lattices, Lamps or Armatures.
 
+ - **Output file format must be an image format, not [movie format]**
+ 
+    As further explained in the '[Limitations](#FileFormatsWhichCantBeUsed)' section, only image formats can be used for rendering. Select a movie format to remove this error.
+
  - **“Armatures objects can only use bounding box tracking in Blender 2.76 and later.”**
     **“Lattice objects can only use bounding box tracking in Blender 2.76 and later.”**
     **“Armature or Lattice objects in this collection can only use bounding box tracking in Blender 2.76 and later.”**
@@ -403,6 +408,10 @@ The add-on’s user preferences appear below the panel in Blender’s user prefe
 <br>
 
 ## <a name="Limitations"></a>:no_entry_sign: Limitations
+
+### <a name="FileFormatsWhichCantBeUsed"></a>File formats which can’t be used
+
+The file format of the render, set in the ‘Output’ tab of the ‘Properties’ editor, must be an image format, not a movie format. This is because, when rendering, the add-on is actually doing many 1 frame renders instead of one long render. This allows the render border to be updated in-between frames, but unfortunately means that movie formats, which require a single, continuous render to be done, cannot be used.
 
 ### <a name="ObjectTypesWhichCantBeTracked"></a>Object types which can't be tracked
 
