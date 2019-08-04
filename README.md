@@ -19,8 +19,8 @@
    - [Options for all 3 tracking modes](#OptionsForAll3TrackingModes)
    - [‘Object’ and ‘Collection’ tracking](#ObjectAndCollectionTracking)
    - ['Keyframe’ tracking](#KeyframeTracking)
- - [Warnings](#Warnings)
  - [User Preferences](#UserPreferences)
+ - [Warnings](#Warnings)
  - [Limitations](#Limitations)
    - [File formats which can't be used](#FileFormatsWhichCantBeUsed)
    - [Object types which can't be tracked](#ObjectTypesWhichCantBeTracked)
@@ -348,6 +348,23 @@ If you need to add extra arguments to the command, such as setting the format or
 
 <br>
 
+## <a name="UserPreferences"></a>:gear: User Preferences
+
+The add-on’s user preferences appear below the panel in Blender’s user preferences where you enable the add-on. Once the add-on is enabled the add-on’s user preferences box will appear below it.
+
+ - **Display border dimensions**
+ 
+    This user preference, which is off by default, turns on a label whose only function is to display in pixels the size of the bounding box. The label appears below the ‘Render Animation’ button for all 3 tracking types when turned on.
+
+    |||
+    |---|---|
+    |Python|`bpy.context.user_preferences.addons[‘animatedRenderborder’].preferences.display_border_dimensions`|
+    |Type|`Bool`|
+    |Default|`False`|
+    |Note|The value passed to `bpy.context.user_preferences.addons` is dependent on the version number.|
+
+<br>
+
 ## <a name="Warnings"></a>:warning: Warnings
 
 There are various warnings that will appear so as to alert you to things that will stop the render from rendering correctly. These need to be fixed before a render can be started, or in the case of rendering using Python, will cause an error to be thrown.
@@ -387,23 +404,6 @@ There are various warnings that will appear so as to alert you to things that wi
     These 3 separate error messages are related to users using a version of Blender prior to version 2.76. Blender 2.76 has a specific change in its code which allows access to the bounding boxes of Armature and Lattice objects. Previous versions of Blender do not have this and so the add-on will automatically turn off and disable the ‘Use Bounding Box’ option when an Armature, Lattice, or collection containing either of those object types is selected when the add-on detects Blender 2.75 or earlier is being used. This doesn’t stop the object being tracked, it just means you can’t use the bounding box to track it. Instead, it will resort to the ‘inner points’ method described in the “Options for ‘Object’ and ‘Collection’ tracking” > “Use Bounding Box” section of this user guide document.
     
     These are the only warnings which will not stop the user from being able to render. If you are using Blender 2.76 or later you will not see these warnings as Armatures and Lattices can be tracked like any of the other trackable objects.
-
-<br>
-
-## <a name="UserPreferences"></a>:gear: User Preferences
-
-The add-on’s user preferences appear below the panel in Blender’s user preferences where you enable the add-on. Once the add-on is enabled the add-on’s user preferences box will appear below it.
-
- - **Display border dimensions**
- 
-    This user preference, which is off by default, turns on a label whose only function is to display in pixels the size of the bounding box. The label appears below the ‘Render Animation’ button for all 3 tracking types when turned on.
-
-    |||
-    |---|---|
-    |Python|`bpy.context.user_preferences.addons[‘animatedRenderborder’].preferences.display_border_dimensions`|
-    |Type|`Bool`|
-    |Default|`False`|
-    |Note|The value passed to `bpy.context.user_preferences.addons` is dependent on the version number.|
 
 <br>
 
