@@ -114,7 +114,7 @@ For those less familar, the steps to intsall it are below:
 
 3. Choose the object (or collection) you wish to track by selecting it from the dropdown box. If this box is blank it means there are no trackable objects (or collections) in the scene.
 
-4. Press <kbd>Numpad </kbd>' to look through the active camera.
+4. Press <kbd>Numpad 0</kbd> to look through the active camera.
 
 You can now scroll in the timeline and, whether your object is animated or still, the render border will move to match the object’s position. You may wish to refine the tracking using the ‘Margin’ and ‘Use Bounding Box’ options. 
 
