@@ -94,9 +94,9 @@ For those less familar, the steps to intsall it are below:
 
 1. If you've downloaded one of the Github releases, unzip it and find the 'animatedRenderborder.py' file. If you already have the .py file, proceed to step 2.
 
-2. Open Blender and open its *User Preferences* by going to *File> User Preferences* and navigate to the *Add-ons* tab.
+2. Open Blender and open its *Preferences* by going to *Edit> Preferences* and navigate to the *Add-ons* tab.
 
-3. Press the *Install from file* button and browse to and select the 'animatedRenderborder.py' file.
+3. Press the *Install from file* button and browse to and select the 'animatedRenderborder.py' file and press *Install...*.
 
 4. The add-on should then automatically appear, which you can then enable by clicking the checkbox next to it. Once enabled, the ‘Animated Render Border’ panel will appear at the bottom of the ‘Render’ tab of the ‘Properties’ area, where all the other render settings are.
 
