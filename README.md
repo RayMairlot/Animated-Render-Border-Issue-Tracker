@@ -14,12 +14,12 @@
    - [Changelog](#Changelog)
  - [Installation](#Installation)
  - [Usage](#Usage)
-   - [Steps to start using ‘Object’ or ‘Group’ tracking](#StepsToStartUsingObjectOrGroupTracking)
+   - [Steps to start using ‘Object’ or 'Collection’ tracking]-(#StepsToStartUsingObjectOrCollectionTracking)
    - [Steps to start using ‘Keyframe’ mode](#StepsToStartUsingKeyframeMode)
    - [Command Line Rendering](#CommandLineRendering)
  - [Options](#Options)
    - [Options for all 3 tracking modes](#OptionsForAll3TrackingModes)
-   - [‘Object’ and ‘Group’ tracking](#ObjectAndGroupTracking)
+   - [‘Object’ and ‘Collection’ tracking](#ObjectAndCollectionTracking)
    - ['Keyframe’ tracking](#KeyframeTracking)
  - [Warnings](#Warnings)
  - [User Preferences](#UserPreferences)
@@ -32,9 +32,9 @@
 
 ## <a name="About"></a>:information_source: About
 
-This add-on makes the ‘render border’ feature in Blender adaptive so that the border updates its location and size every frame to always surround the selected object or group of objects*, focusing your render power on just those specific parts of the image. You can scroll in the timeline to see the border update automatically and render when ready.
+This add-on makes the ‘render border’ feature in Blender adaptive so that the border updates its location and size every frame to always surround the selected object or collection of objects*, focusing your render power on just those specific parts of the image. You can scroll in the timeline to see the border update automatically and render when ready.
 
-There is also a ‘Keyframe’ mode, to allow you to manually place and keyframe the position of the render border instead of tracking an object or group.
+There is also a ‘Keyframe’ mode, to allow you to manually place and keyframe the position of the render border instead of tracking an object or collection.
 
 The add-on looks at the bounding box of the object(s) selected to be tracked and will adjust the render border accordingly. Alternatively, objects can be tracked by analysing the ‘inner points’ of the object (vertices, lattice points, curve points etc.), which can be slower with complex objects, but very precise.
 
@@ -44,9 +44,9 @@ You can also always use the ‘margin’ feature of the add-on to make sure you�
 
 ### Animated Render Border Panel:
 
-|Object Mode|Group Mode|Keyframe Mode|
+|Object Mode|Collection Mode|Keyframe Mode|
 |---|---|---|
-|![Object Mode](/README%20images/Object%20Mode.png)|![Group Mode](/README%20images/Collection%20Mode.png)|![Keyframe Mode](/README%20images/Keyframe%20Mode.png)|
+|![Object Mode](/README%20images/Object%20Mode.png)|![Collection Mode](/README%20images/Collection%20Mode.png)|![Keyframe Mode](/README%20images/Keyframe%20Mode.png)|
 
 <br>
 
@@ -106,13 +106,13 @@ For those less familar, the steps to intsall it are below:
   
 ## <a name="Usage"></a>:books: Usage
 
-### <a name="StepsToStartUsingObjectOrGroupTracking"></a>Steps to start using ‘Object’ or ‘Group’ tracking
+### <a name="StepsToStartUsingObjectOrCollectionTracking"></a>Steps to start using ‘Object’ or ‘Collection’ tracking
 
 1. Enable tracking by clicking the checkbox next to the panel title.
 
-2. If you are tracking a single object you can leave the tracking type on its default, otherwise change to ‘Group’ tracking.
+2. If you are tracking a single object you can leave the tracking type on its default, otherwise change to ‘Collection’ tracking.
 
-3. Choose the object (or group) you wish to track by selecting it from the dropdown box. If this box is blank it means there are no trackable objects (or groups) in the scene.
+3. Choose the object (or collection) you wish to track by selecting it from the dropdown box. If this box is blank it means there are no trackable objects (or collections) in the scene.
 
 4. Press <kbd>Numpad </kbd>' to look through the active camera.
 
@@ -170,7 +170,7 @@ If you need to add extra arguments to the command, such as setting the format or
 
  - **Enable/Disable** 
 
-    This is the checkbox that appears next to the panel name and allows you to easily turn on or off the tracking without having to remove the tracking object or group (which, if blank, would also disable tracking) or keyframes. When turning this on it will turn on the render border option in the Render> Dimensions panel if it isn’t already on. It won’t, however, turn off the render border when disabling it.
+    This is the checkbox that appears next to the panel name and allows you to easily turn on or off the tracking without having to remove the tracking object or collection (which, if blank, would also disable tracking) or keyframes. When turning this on it will turn on the render border option in the Render> Dimensions panel if it isn’t already on. It won’t, however, turn off the render border when disabling it.
 
     |||
     |---|---|
@@ -180,12 +180,12 @@ If you need to add extra arguments to the command, such as setting the format or
 
  - **Type**
  
-    The type of tracking to perform: either track a single object, a group of objects or manually keyframe the border values. The exact object or group to track is specified later on.
+    The type of tracking to perform: either track a single object, a collection of objects or manually keyframe the border values. The exact object or collection to track is specified later on.
 
     |||
     |---|---|
     |Python|`scene.animated_render_border.type`|
-    |Type|`Enum in [‘Object’, ‘Group’, ‘Keyframe’]`|
+    |Type|`Enum in [‘Object’, ‘Collection’, ‘Keyframe’]`|
     |Default|`‘Object’`|
 
  - **Render Animation**
@@ -196,7 +196,7 @@ If you need to add extra arguments to the command, such as setting the format or
 
     The render can be cancelled by pressing the ‘Esc’ key on the keyboard. This doesn’t immediately cancel the render though, as the current frame has to finish rendering before it will stop.
 
-    The ‘Render Animation’ button will appear disabled and display a ‘Fix errors to render’ message if there are any issues which would stop the render from operating correctly. These various issues are covered in the ‘Warnings’ section later on. The button will also be disabled if nothing is selected to be tracked when in ‘Object’ or ‘Group’ tracking mode.
+    The ‘Render Animation’ button will appear disabled and display a ‘Fix errors to render’ message if there are any issues which would stop the render from operating correctly. These various issues are covered in the ‘Warnings’ section later on. The button will also be disabled if nothing is selected to be tracked when in ‘Object’ or ‘Collection’ tracking mode.
 
     |||
     |---|---|
@@ -212,7 +212,7 @@ If you need to add extra arguments to the command, such as setting the format or
  
 <br>
 
-### <a name="ObjectAndGroupTracking"></a>‘Object’ and ‘Group’ tracking
+### <a name="ObjectAndCollectionTracking"></a>‘Object’ and ‘Collection’ tracking
 
  - **Object to track**
  
@@ -227,18 +227,18 @@ If you need to add extra arguments to the command, such as setting the format or
     |Default|`""`|
     |Note|Cannot be blank when tracking type is ‘Object’.|
 
- - **Group to track**
+ - **Collection to track**
  
-    When ‘Group’ tracking has been selected you can select your chosen group from the dropdown box. If this dropdown box is blank it means there are no trackable groups in the scene.
+    When ‘Collection’ tracking has been selected you can select your chosen collection from the dropdown box. If this dropdown box is blank it means there are no trackable collections in the scene.
     
-    The types of objects that can be tracked in a group are: Meshes, Text objects, Curves, Surfaces, Meta objects, Lattices and Armatures. If the chosen group contains object types that are not in this list then they will not be taken into account when doing the tracking.
+    The types of objects that can be tracked in a collection are: Meshes, Text objects, Curves, Surfaces, Meta objects, Lattices and Armatures. If the chosen collection contains object types that are not in this list then they will not be taken into account when doing the tracking.
 
     |||
     |---|---|
-    |Python|`scene.animated_render_border.group`|
+    |Python|`scene.animated_render_border.collection`|
     |Type|`String`|
     |Default|`""`|
-    |Note|Cannot be blank when tracking type is ‘Group’.|
+    |Note|Cannot be blank when tracking type is ‘Collection’.|
 
  - **Bone**
  
@@ -265,9 +265,9 @@ If you need to add extra arguments to the command, such as setting the format or
  
     By default, the tracking will calculate where the render border has to be by looking at the bounding box of the object. This is relatively quick as there are only 8 points of the bounding box (the corners) to analyse, but can appear slightly inaccurate depending on the orientation of the object.
     
-    Turning this option off switches to a slower, more precise method, which analyses the ‘inner points’ of the object i.e. vertices if it’s a mesh, the lattice points for lattices, bones for armatures and so on, depending on the object type. Out of the types of objects that can be tracked, the following object types do not have any ‘inner points’ and so can’t use this precise method: Text objects and Meta objects. When one of these objects is tracked, the ‘Bounding Box’ option will be turned on and cannot be turned off. If you are using ‘Group’ tracking and have ‘Bounding Box’ turned off, then ‘inner points’ will be used on any objects in the group that support that; ones that don’t will fall back to the bounding box method.
+    Turning this option off switches to a slower, more precise method, which analyses the ‘inner points’ of the object i.e. vertices if it’s a mesh, the lattice points for lattices, bones for armatures and so on, depending on the object type. Out of the types of objects that can be tracked, the following object types do not have any ‘inner points’ and so can’t use this precise method: Text objects and Meta objects. When one of these objects is tracked, the ‘Bounding Box’ option will be turned on and cannot be turned off. If you are using ‘Collection’ tracking and have ‘Bounding Box’ turned off, then ‘inner points’ will be used on any objects in the collection that support that; ones that don’t will fall back to the bounding box method.
 
-    While this ‘inner points’ method is more precise, it is slower than the bounding box method as it has to compare every ‘inner point’ of the object, but results in a very precise calculation, creating a very tight, accurate border around the object. However, this could get very slow for objects with many inner points (e.g. high resolution meshes) or a group of many objects.
+    While this ‘inner points’ method is more precise, it is slower than the bounding box method as it has to compare every ‘inner point’ of the object, but results in a very precise calculation, creating a very tight, accurate border around the object. However, this could get very slow for objects with many inner points (e.g. high resolution meshes) or a collection of many objects.
     
     The exception to the precision ‘inner points’ offers is with ‘Surface’ type objects as often their ‘inner points’ are far larger in area than the displayed surface. In this case, ‘Use Bounding Box’ will probably be preferable.
 
@@ -369,19 +369,19 @@ There are various warnings that will appear so as to alert you to things that wi
  
     If an object is selected to be tracked, but that object is subsequently renamed, the add-on will no longer be able to detect or track that object. To correct this error re-select the object to be tracked from the object drop down list. This error will also appear when the selected object has been deleted.
     
- - **The group selected to be tracked does not exist**
+ - **The collection selected to be tracked does not exist**
  
-    If a group is selected to be tracked, but that group is subsequently renamed, the add-on will no longer be able to detect or track that group. To correct this error re-select the group to be tracked from the group drop down list. This error will also appear when the selected group has been deleted.
+    If a collection is selected to be tracked, but that collection is subsequently renamed, the add-on will no longer be able to detect or track that collection. To correct this error re-select the collection to be tracked from the collection drop down list. This error will also appear when the selected collection has been deleted.
     
- - **The selected group has no trackable objects**
+ - **The selected collection has no trackable objects**
  
-    If the group to be tracked is empty or none of the objects can be tracked, this error appears. The group must contain one of the following types of object for tracking to be possible: Meshes, Text objects, Curves, Surfaces, Meta objects, Lattices, Lamps or Armatures.
+    If the collection to be tracked is empty or none of the objects can be tracked, this error appears. The collection must contain one of the following types of object for tracking to be possible: Meshes, Text objects, Curves, Surfaces, Meta objects, Lattices, Lamps or Armatures.
 
  - **“Armatures objects can only use bounding box tracking in Blender 2.76 and later.”**
     **“Lattice objects can only use bounding box tracking in Blender 2.76 and later.”**
-    **“Armature or Lattice objects in this group can only use bounding box tracking in Blender 2.76 and later.”**
+    **“Armature or Lattice objects in this collection can only use bounding box tracking in Blender 2.76 and later.”**
     
-    These 3 separate error messages are related to users using a version of Blender prior to version 2.76. Blender 2.76 has a specific change in its code which allows access to the bounding boxes of Armature and Lattice objects. Previous versions of Blender do not have this and so the add-on will automatically turn off and disable the ‘Use Bounding Box’ option when an Armature, Lattice, or group containing either of those object types is selected when the add-on detects Blender 2.75 or earlier is being used. This doesn’t stop the object being tracked, it just means you can’t use the bounding box to track it. Instead, it will resort to the ‘inner points’ method described in the “Options for ‘Object’ and ‘Group’ tracking” > “Use Bounding Box” section of this user guide document.
+    These 3 separate error messages are related to users using a version of Blender prior to version 2.76. Blender 2.76 has a specific change in its code which allows access to the bounding boxes of Armature and Lattice objects. Previous versions of Blender do not have this and so the add-on will automatically turn off and disable the ‘Use Bounding Box’ option when an Armature, Lattice, or collection containing either of those object types is selected when the add-on detects Blender 2.75 or earlier is being used. This doesn’t stop the object being tracked, it just means you can’t use the bounding box to track it. Instead, it will resort to the ‘inner points’ method described in the “Options for ‘Object’ and ‘Collection’ tracking” > “Use Bounding Box” section of this user guide document.
     
     These are the only warnings which will not stop the user from being able to render. If you are using Blender 2.76 or later you will not see these warnings as Armatures and Lattices can be tracked like any of the other trackable objects.
 
@@ -408,7 +408,7 @@ The add-on’s user preferences appear below the panel in Blender’s user prefe
 
 ### <a name="ObjectTypesWhichCantBeTracked"></a>Object types which can't be tracked
 
-Ideally, all objects would be trackable, but this currently isn’t possible. This means that you can’t currently track camera objects, empties and a few other object types and they won’t appear in the object drop down list and will be ignored if they are present in the chosen tracking group.   
+Ideally, all objects would be trackable, but this currently isn’t possible. This means that you can’t currently track camera objects, empties and a few other object types and they won’t appear in the object drop down list and will be ignored if they are present in the chosen tracking collection.   
 
 In the future, hopefully all objects will be supported for tracking, but for now there is a useable workaround. If you wanted to track an empty you would simply have to make a cube and scale it so that the empty is contained within the cube. You can then parent the cube to the empty and track the cube object instead. The cube doesn’t have to be visible, visible in the render or even on the same layer, so it should be relatively unobtrusive.  
 
