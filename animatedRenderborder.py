@@ -343,7 +343,7 @@ def animated_render_border(scene):
                         
                 elif obj.type == "ARMATURE":
 
-                    #Should only look for at the border.object and bone properties if in 'Object' tracking mode.
+                    #Should only look at the border.object and bone properties if in 'Object' tracking mode.
                     if border.bone == "" or border.type == "Collection":
                         
                         verts = (chain.from_iterable((bone.head, bone.tail) for bone in obj.pose.bones))
