@@ -302,28 +302,8 @@ def animated_render_border(scene):
                 
                 verts = []
                 if border.use_bounding_box or obj.type in noVertexObjectTypes: #Objects that have no vertices
-                    
-                    #Lattices and Armatures can't use bounding box in pre 2.76 version of blender.
-                    if bpy.app.version < (2, 76, 0) and obj.type in ["ARMATURE","LATTICE"]:
-                    
-                        if obj.type == "LATTICE":
-                            
-                            verts = (vert.co_deform for vert in obj.data.points)
-                            
-                        elif obj.type == "ARMATURE":
-                            
-                            if border.bone == "":
                         
-                                verts = (chain.from_iterable((bone.head, bone.tail) for bone in obj.pose.bones))
-                        
-                            else:
-                                
-                                bone = bpy.data.objects[border.object].pose.bones[border.bone]
-                                verts = [bone.head, bone.tail]                                                   
-                        
-                    else:
-                        
-                        verts = (Vector(corner) for corner in obj.bound_box)
+                    verts = (Vector(corner) for corner in obj.bound_box)
                 
                 elif obj.type == "MESH":
 
@@ -807,15 +787,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             if border.type == "Object":
                 row.label(text="Object to track:")
                 row = column.row()
-                
-                #Armatures and Lattices can only be tracked in blender 2.76 and later.
-                if validObject() and bpy.app.version < (2, 76, 0) and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
-                    row = column.row()
-                    row.label(text=bpy.data.objects[border.object].type.lower().capitalize()+" objects can only use bounding", icon="ERROR")
-                    row = column.row()
-                    row.label(text="box tracking in Blender 2.76 and later.", icon="BLANK1")
-                    row = column.row()   
-                
+
                 objectIcon = "OBJECT_DATA"
                 if validObject():
                     objectIcon = "OUTLINER_OB_"+bpy.data.objects[border.object].type
@@ -828,29 +800,6 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 
             else:
                 row.label(text="Collection to track:")
-                
-                #Armatures and Lattices can only be tracked in blender 2.76 and later.
-                warningNeeded = False
-                if validCollection() and bpy.app.version < (2, 76, 0) and border.use_bounding_box:
-                
-                    for object in bpy.data.collections[border.collection].objects:
-                        
-                        if bpy.data.objects[object.name].type in ["ARMATURE","LATTICE"]:
-                            
-                            warningNeeded = True
-                            
-                            #Only need to find 1 object for it to be an error, can cancel after that
-                            break;
-                
-                if warningNeeded:            
-                    row = column.row()
-                    row.label(text="Armature or Lattice objects in this collection", icon="ERROR")
-                    row = column.row()
-                    row.label(text="can only use bounding box tracking in", icon="BLANK1")
-                    row = column.row()
-                    row.label(text="Blender 2.76 and later.", icon="BLANK1")
-                    row = column.row()  
-                
                 row = column.row()
                 row.prop_search(scene.animated_render_border, "collection", bpy.data, "collections", text="")
             
@@ -881,7 +830,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             noVertices = False
             
-            if validObject() and bpy.data.objects[border.object].type not in ["ARMATURE","LATTICE"]:
+            if validObject():
 
                 if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects without vertices or bones
                     
@@ -896,10 +845,6 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 if border.object == "":
                         
                     noVertices = True
-                    
-                if bpy.app.version < (2, 76, 0):
-                    
-                    noVertices = True     
                                             
             if noVertices:    
                 row.enabled = False
