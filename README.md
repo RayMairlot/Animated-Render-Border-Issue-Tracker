@@ -397,14 +397,6 @@ There are various warnings that will appear so as to alert you to things that wi
  
     As further explained in the '[Limitations](#FileFormatsWhichCantBeUsed)' section, only image formats can be used for rendering. Select a movie format to remove this error.
 
- - **“Armatures objects can only use bounding box tracking in Blender 2.76 and later.”**
-    **“Lattice objects can only use bounding box tracking in Blender 2.76 and later.”**
-    **“Armature or Lattice objects in this collection can only use bounding box tracking in Blender 2.76 and later.”**
-    
-    These 3 separate error messages are related to users using a version of Blender prior to version 2.76. Blender 2.76 has a specific change in its code which allows access to the bounding boxes of Armature and Lattice objects. Previous versions of Blender do not have this and so the add-on will automatically turn off and disable the ‘Use Bounding Box’ option when an Armature, Lattice, or collection containing either of those object types is selected when the add-on detects Blender 2.75 or earlier is being used. This doesn’t stop the object being tracked, it just means you can’t use the bounding box to track it. Instead, it will resort to the ‘inner points’ method described in the “Options for ‘Object’ and ‘Collection’ tracking” > “Use Bounding Box” section of this user guide document.
-    
-    These are the only warnings which will not stop the user from being able to render. If you are using Blender 2.76 or later you will not see these warnings as Armatures and Lattices can be tracked like any of the other trackable objects.
-
 <br>
 
 ## <a name="Limitations"></a>:no_entry_sign: Limitations
