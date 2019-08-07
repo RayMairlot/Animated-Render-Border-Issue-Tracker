@@ -361,7 +361,6 @@ The add-on’s user preferences appear below the panel in Blender’s user prefe
     |Python|`bpy.context.user_preferences.addons[‘animatedRenderborder’].preferences.display_border_dimensions`|
     |Type|`Bool`|
     |Default|`False`|
-    |Note|The value passed to `bpy.context.user_preferences.addons` is dependent on the version number.|
 
 <br>
 
