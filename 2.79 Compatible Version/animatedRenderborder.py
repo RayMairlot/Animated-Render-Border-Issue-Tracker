@@ -844,15 +844,22 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             noVertices = False
             
+            #Object exists
             if validObject() and bpy.data.objects[border.object].type not in ["ARMATURE","LATTICE"]:
 
-                if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects without vertices or bones
+                #Objects without vertices (disable because bounding box can't be unchecked)
+                if bpy.data.objects[border.object].type in noVertexObjectTypes:
+
+                    noVertices = True
+
+                #Bones don't have a bounding box
+                elif bpy.data.objects[border.object].type == "ARMATURE" and border.bone != "":
                     
                     noVertices = True
                     
             elif border.type == "Group" and border.group == "":
                 
-                    noVertices = True
+                noVertices = True
                     
             elif border.type == "Object":
                 
