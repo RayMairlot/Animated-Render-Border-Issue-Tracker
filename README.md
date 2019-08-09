@@ -69,6 +69,10 @@ While the table below describes the add-on in terms of Blender 2.79b and 2.80, v
 
 ### <a name="Changelog"></a>Changelog
 
+#### V3.0
+ - Updated add-on to work with Blender 2.80.
+ -  Removed the ability to render when an image format is selected in the Output panel (this was a mistake and resulted in multiple video files being created instead of a single output file).
+ - Various UI fixes related to tracking bones.
 #### V2.1
  - Bug fixes
 #### V2.0
