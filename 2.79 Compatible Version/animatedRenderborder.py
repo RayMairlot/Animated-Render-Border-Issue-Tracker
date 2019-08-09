@@ -846,7 +846,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
             
             if validObject() and bpy.data.objects[border.object].type not in ["ARMATURE","LATTICE"]:
 
-                if bpy.data.objects[border.object].type in noVertexObjectTypes or border.bone != "": #Objects without vertices or bones
+                if bpy.data.objects[border.object].type in noVertexObjectTypes: #Objects without vertices or bones
                     
                     noVertices = True
                     
