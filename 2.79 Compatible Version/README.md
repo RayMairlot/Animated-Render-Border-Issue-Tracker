@@ -50,10 +50,6 @@ You can also always use the ‘margin’ feature of the add-on to make sure you�
 
 ## <a name="AddOnVersionsAndBlenderCompatability"></a>:heavy_check_mark: Add-on Versions and Blender Compatibility 
 
-The add-on is currently being updated to be compatible with Blender 2.80, with further testing to be carried out when 2.80 has been released. The work is mostly done and is currently downloadable from the [2.80-Update branch](https://github.com/RayMairlot/Animated-Render-Border/tree/2.8-Update). This will be purely a compatability update and contains no new features. It will contain a few bug fixes which will also be applied to the 2.79 compatible version (possibly as 2.1.1).
-
-## <a name="AddOnVersionsAndBlenderCompatability"></a>:heavy_check_mark: Add-on Versions and Blender Compatibility 
-
 The add-on was originally developed in 2.79 and has now been updated to 2.80. The old, 2.79 version now resides in the [2.79 Compatible Version](/2.79%20Compatible%20Version) folder along with its documentation.
 
 ### <a name="Compatibility"></a>Compatibility
