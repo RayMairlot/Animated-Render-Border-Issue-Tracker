@@ -60,7 +60,7 @@ While the table below describes the add-on in terms of Blender 2.79b and 2.80, v
 | Add-on Version | Blender 2.79b | Blender 2.80+ | Notes |
 |:---:|:---:|:---:|:---|
 | 3.0* | :x: | :heavy_check_mark: | |
-| [2.1.6](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | This version was released at the same time as version 3.0 so that the 2.79 compatible version has the same bug fixes as the 2.80 version. |
+| [2.1.6](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | <ul><li>This version was released at the same time as version 3.0 so that the 2.79 compatible version has the same bug fixes as the 2.80 version.</li><li>This version comes bundled with the 3.0 release download.</li></ul> |
 | [2.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
 | [2.0](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
 | [1.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
