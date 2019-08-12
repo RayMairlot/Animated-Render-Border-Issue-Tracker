@@ -57,13 +57,14 @@ The add-on was originally developed in 2.79 and has now been updated to 2.80. Th
 
 While the table below describes the add-on in terms of Blender 2.79b and 2.80, versions 2.1 and lower *are* compatible with versions of Blender prior to 2.79b. Versions 1.0 and 1.1 were originally released as having been tested with Blender 2.74 and versions 2.0 and 2.1 were tested with 2.76 and, while *untested*, they should also be compatible with versions of Blender earlier than those. 
 
-| Add-on Version | Blender 2.79b | Blender 2.80+ |
-|:---:|:---:|:---:|
-| 3.0* | :x: | :heavy_check_mark: |
-| [2.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: |
-| [2.0](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: |
-| [1.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: |
-| [1.0](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.0) | :heavy_check_mark: | :x: |
+| Add-on Version | Blender 2.79b | Blender 2.80+ | Notes |
+|:---:|:---:|:---:|:---|
+| 3.0* | :x: | :heavy_check_mark: | |
+| [2.1.6](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | This version was released at the same time as version 3.0 so that the 2.79 compatible version has the same bug fixes as the 2.80 version. |
+| [2.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
+| [2.0](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
+| [1.1](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.1) | :heavy_check_mark: | :x: | |
+| [1.0](https://github.com/RayMairlot/Animated-Render-Border/releases/tag/v1.0) | :heavy_check_mark: | :x: | |
 
 **Not yet released.*
 
@@ -72,6 +73,9 @@ While the table below describes the add-on in terms of Blender 2.79b and 2.80, v
 #### V3.0
  - Updated add-on to work with Blender 2.80.
  -  Removed the ability to render when an image format is selected in the Output panel (this was a mistake and resulted in multiple video files being created instead of a single output file).
+ - Various UI fixes related to tracking bones.
+#### V2.1.6
+ - Removed the ability to render when an image format is selected in the Output panel (this was a mistake and resulted in multiple video files being created instead of a single output file).
  - Various UI fixes related to tracking bones.
 #### V2.1
  - Bug fixes
