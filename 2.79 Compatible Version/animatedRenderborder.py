@@ -20,7 +20,7 @@ bl_info = {
     "name": "Animated Render Border",
     "description": "Track objects or groups with the border render",
     "author": "Ray Mairlot",
-    "version": (2, 1),
+    "version": (2, 1, 6),
     "blender": (2, 79, 0),
     "location": "Properties> Render> Animated Render Border",
     "category": "Render"}
