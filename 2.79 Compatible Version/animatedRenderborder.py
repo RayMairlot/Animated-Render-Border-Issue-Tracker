@@ -33,6 +33,7 @@ from itertools import chain
 
 trackableObjectTypes = ["MESH", "FONT", "CURVE", "SURFACE", "META", "LATTICE", "ARMATURE"] #EMPTY, LAMP, CAMERA and SPEAKER objects cannot currently be tracked.
 noVertexObjectTypes = ["FONT", "META"]
+invalidRenderFormats = {}
 
 #######Update functions########################################################
 
@@ -547,6 +548,18 @@ def validGroup():
         
         return True   
     
+
+def getMovieFormats():
+
+    fileFormats = bpy.context.scene.render.image_settings.bl_rna.properties['file_format'].enum_items.items()
+
+    return dict([(f[1].identifier, f[1].name) for f in fileFormats if f[1].icon == "FILE_MOVIE"])
+
+
+def validRenderFormat():
+
+    return bpy.context.scene.render.image_settings.file_format not in invalidRenderFormats
+
     
 def checkForErrors():
     
@@ -597,6 +610,10 @@ def checkForErrors():
         if trackableObjects < 1:
 
             errors += "\n The selected group has no trackable objects."
+
+    if not validRenderFormat():
+
+        errors += "\n Output file format must be an image format, not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'."
  
     if errors != "":
         errors = "\n The following error(s) have to be addressed before rendering:"+errors
@@ -721,6 +738,15 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
                 row.label(text="objects.", icon="SCULPT_DYNTOPO")
                 
                 error+=1
+
+        if not validRenderFormat():
+
+            row = layout.row()
+            row.label(text="Output file format must be an image", icon="ERROR")
+            row = layout.row()
+            row.label(text="format, not '" + invalidRenderFormats[scene.render.image_settings.file_format] + "'.", icon="BLANK1")
+
+            error+=1
                      
         column = layout.column()
          
@@ -1048,6 +1074,9 @@ class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
 
 def register():
     
+    global invalidRenderFormats
+    invalidRenderFormats = getMovieFormats()
+
     bpy.utils.register_class(animatedRenderBorderProperties)
     
     bpy.types.Scene.animated_render_border = bpy.props.PointerProperty(type=animatedRenderBorderProperties)
