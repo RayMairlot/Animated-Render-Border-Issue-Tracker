@@ -1,5 +1,21 @@
 # Changelog:
 
+## V2.1.6
+
+### Fixes:
+
++ Removed the ability to render when an image format is selected in the Output panel (this was a mistake and resulted in multiple video files being created instead of a single output file). See [Issue #7](https://github.com/RayMairlot/Animated-Render-Border/issues/7).
+
++ Fix for bone to track not having 'Use Bounding Box' option disabled.
+
++ Fix for 'Use Bounding Box' being disabled for objects other than Armatures if 'bone' property had previously been set.
+
++ Fix for warning not appearing and tracking not being disabled when bone to track doesn't exist.
+
++ Fix for Group tracking mode trying to access the `border.object` and `border.bone properties`.
+
+<br>
+
 ## V2.1
 
 ### Fixed:
