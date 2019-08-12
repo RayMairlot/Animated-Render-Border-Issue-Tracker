@@ -167,7 +167,10 @@ def toggleGroupBoundingBox(toggle):
 
 
 def toggleTracking(self,context):
-    
+
+    global invalidRenderFormats
+    invalidRenderFormats = getMovieFormats()
+
     border = context.scene.animated_render_border
     
     if border.enable and not context.scene.render.use_border:
@@ -664,6 +667,15 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
         
         error = 0
         
+        #There is a chance that when updating the add-on, it will already be in an enabled state
+        #and won't have a chance to initalise the invalid formats.
+        #Mainly a problem with 2.79 version.
+        global invalidRenderFormats
+
+        if len(invalidRenderFormats) == 0:
+
+            invalidRenderFormats = getMovieFormats()
+
         if not context.scene.render.use_border and border.enable:
             row = layout.row()
             split = row.split(0.7)
@@ -1073,9 +1085,6 @@ class AnimatedRenderBorderPreferences(bpy.types.AddonPreferences):
                
 
 def register():
-    
-    global invalidRenderFormats
-    invalidRenderFormats = getMovieFormats()
 
     bpy.utils.register_class(animatedRenderBorderProperties)
     
