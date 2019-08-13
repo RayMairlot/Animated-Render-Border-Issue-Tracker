@@ -14,6 +14,8 @@
 
 + Fix for Group tracking mode trying to access the `border.object` and `border.bone properties`.
 
++ Fix for Group tracking mode trying to access a group's objects when the chosen group has been deleted.
+
 <br>
 
 ## V2.1

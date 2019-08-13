@@ -78,7 +78,7 @@ def refreshTracking(self,context):
         objectAdd = border.old_trackable_objects.add()
         objectAdd.name = border.object
         
-    elif border.type == "Group" and border.group !="":
+    elif border.type == "Group" and validGroup():
         
         border.old_trackable_objects.clear()
         for object in bpy.data.groups[border.group].objects:

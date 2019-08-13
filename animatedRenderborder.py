@@ -74,7 +74,7 @@ def refreshTracking(self,context):
         objectAdd = border.old_trackable_objects.add()
         objectAdd.name = border.object
         
-    elif border.type == "Collection" and border.collection !="":
+    elif border.type == "Collection" and validCollection():
         
         border.old_trackable_objects.clear()
         for object in bpy.data.collections[border.collection].objects:

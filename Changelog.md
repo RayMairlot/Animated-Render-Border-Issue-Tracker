@@ -18,6 +18,8 @@
 
 + Fix for Group (now Collection) tracking mode trying to access the `border.object` and `border.bone properties`.
 
++ Fix for Collection tracking mode trying to access a collection's objects when the chosen collection has been deleted.
+
 <br>
 
 ## V2.1
