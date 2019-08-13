@@ -65,10 +65,6 @@ def refreshTracking(self,context):
         elif bpy.data.objects[border.object].type == "ARMATURE" and border.bone != "":
             
             border.use_bounding_box = False
-            
-        elif bpy.app.version < (2, 76, 0) and bpy.data.objects[border.object].type in ["ARMATURE","LATTICE"]:
-            
-            border.use_bounding_box = False
     
     #Create a a list of currently tracked objects so bounding boxes can be cleared
     #when switching to a new object            
