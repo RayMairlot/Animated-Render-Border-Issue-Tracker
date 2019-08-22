@@ -1,6 +1,6 @@
 ﻿# Animated Render Border
 
-:information_source: *While the source code for this add-on is available here for free, if this add-on has helped you please do consider supporting me by buying it on the blender market: https://blendermarket.com/products/animated-render-border/*
+:information_source: *While the source code for this add-on is available here for free, if this add-on has helped you please do consider supporting me by buying it on the blender market: https://blendermarket.com/products/animated-render-border/ Alternatively, you can donate any amount via PayPal to support development: [![PayPal Donate Button](/README%20images/PayPal%20Donate%20Button.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=87J59GUMLYYBN&source=url)*
 
 ![ARB Featured Image](/README%20images/ARB%20Github%20Featured%20Product%20image.png)
 
