@@ -20,7 +20,7 @@ bl_info = {
     "name": "Animated Render Border",
     "description": "Track objects or collections with the border render",
     "author": "Ray Mairlot",
-    "version": (3, 0),
+    "version": (3, 0, 1),
     "blender": (2, 80, 0),
     "location": "Properties> Render> Animated Render Border",
     "category": "Render"}
@@ -654,7 +654,7 @@ class RENDER_PT_animated_render_border(bpy.types.Panel):
 
         if not context.scene.render.use_border and border.enable:
             row = layout.row()
-            split = row.split(0.7)
+            split = row.split(factor=0.7)
             
             column = split.column()
             column.label(text="'Border' is disabled in", icon="ERROR")
