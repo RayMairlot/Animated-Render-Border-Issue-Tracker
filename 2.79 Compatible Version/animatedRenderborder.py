@@ -20,7 +20,7 @@ bl_info = {
     "name": "Animated Render Border",
     "description": "Track objects or groups with the border render",
     "author": "Ray Mairlot",
-    "version": (2, 1, 6),
+    "version": (2, 1, 7),
     "blender": (2, 79, 0),
     "location": "Properties> Render> Animated Render Border",
     "category": "Render"}
@@ -1010,7 +1010,7 @@ class RENDER_OT_animated_render_border_render(bpy.types.Operator):
                 self.oldEnd = bpy.context.scene.frame_end
                 self.oldCurrent = bpy.context.scene.frame_current
                 
-                context.window_manager.progress_begin(0,context.scene.frame_end)
+                context.window_manager.progress_begin(context.scene.frame_start,context.scene.frame_end)
                 
                 context.window_manager.modal_handler_add(self)
                 
