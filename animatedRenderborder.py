@@ -271,10 +271,10 @@ class AnimatedRenderBorderProperties(bpy.types.PropertyGroup):
 
 
 @persistent
-def animated_render_border(scene):
+def animated_render_border(scene, depsgraph):
         
     scene = bpy.context.scene
-    camera = scene.camera
+    camera = scene.camera.evaluated_get(depsgraph)
     border = scene.animated_render_border
     
     cameraExists = False
@@ -420,7 +420,7 @@ def render(self, context):
         for i in range(oldStart, oldEnd+1):
                             
             context.scene.frame_set(i)
-            animated_render_border(context.scene)
+            animated_render_border(context.scene, context.evaluated_depsgraph_get())
             
             context.scene.frame_start = i
             context.scene.frame_end = i
@@ -442,7 +442,7 @@ def render(self, context):
             print("Rendering frame "+str(self.counter))
                     
             context.scene.frame_set(self.counter)
-            animated_render_border(context.scene)
+            animated_render_border(context.scene, context.evaluated_depsgraph_get())
             
             context.scene.frame_start = self.counter
             context.scene.frame_end = self.counter
